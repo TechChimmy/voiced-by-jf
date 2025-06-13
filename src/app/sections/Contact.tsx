@@ -1,97 +1,154 @@
 'use client'
 
-import { Mail, MessageCircle, Linkedin } from 'lucide-react'
+import { Mail, MessageCircle, Linkedin, Phone } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { useState } from 'react'
 import Link from 'next/link'
 
+// Create a type for the form data
+type FormData = {
+  name: string
+  phone: string
+  email: string
+  message: string
+  timestamp?: string
+}
+
 export default function ContactSection() {
-  const [form, setForm] = useState({ name: '', phone: '', email: '', message: '' })
+  const [form, setForm] = useState<FormData>({ 
+    name: '', 
+    phone: '', 
+    email: '', 
+    message: '' 
+  })
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitStatus, setSubmitStatus] = useState<{success: boolean, message: string} | null>(null)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value })
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // Handle form submission logic
-    console.log(form)
+    setIsSubmitting(true)
+    setSubmitStatus(null)
+
+    try {
+      const response = await fetch('/api/submit-form', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(form),
+      })
+
+      const result = await response.json()
+      
+      if (response.ok) {
+        setSubmitStatus({ success: true, message: 'Message sent successfully!' })
+        setForm({ name: '', phone: '', email: '', message: '' })
+      } else {
+        throw new Error(result.error || 'Failed to send message')
+      }
+    } catch (error) {
+      console.error('Error submitting form:', error)
+      setSubmitStatus({ 
+        success: false, 
+        message: error instanceof Error ? error.message : 'Failed to send message'
+      })
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
-    <section className="bg-[#000000] text-white py-16 px-4 md:px-10 lg:px-20">
+    <section className="bg-[#303030] text-white py-16 px-4 md:px-10 lg:px-20">
       <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-12 items-start justify-between">
         {/* Left: Form */}
-        <div className="bg-[#303030] rounded-xl p-6 w-full lg:w-1/2 shadow-lg">
-          <h2 className="text-[#ffde4f] text-xl font-bold mb-6 tracking-widest text-center lg:text-left">
+        <div className="bg-[#ffde4f] rounded-xl p-6 w-full lg:w-1/2 shadow-lg">
+          <h2 className="text-black text-xl font-bold mb-6 tracking-widest text-center lg:text-left">
             LET ME BE YOUR NEXT NARRATOR!
           </h2>
           <form onSubmit={handleSubmit} className="space-y-4">
+            {submitStatus && (
+              <div className={`p-3 rounded-md ${
+                submitStatus.success ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+              }`}>
+                {submitStatus.message}
+              </div>
+            )}
             <div className="flex flex-col md:flex-row gap-4">
               <Input
                 placeholder="Name"
                 name="name"
                 value={form.name}
                 onChange={handleChange}
-                className="bg-transparent border border-white text-white"
+                className="bg-white border border-white text-black"
                 required
+                disabled={isSubmitting}
               />
               <Input
                 placeholder="Phone"
                 name="phone"
                 value={form.phone}
                 onChange={handleChange}
-                className="bg-transparent border border-white text-white"
+                className="bg-white border border-white text-black"
+                disabled={isSubmitting}
               />
             </div>
             <Input
               placeholder="Email"
               name="email"
+              type="email"
               value={form.email}
               onChange={handleChange}
-              className="bg-transparent border border-white text-white"
+              className="bg-white border border-white text-black"
               required
+              disabled={isSubmitting}
             />
             <Textarea
               placeholder="Message"
               name="message"
               value={form.message}
               onChange={handleChange}
-              className="bg-transparent border border-white text-white min-h-[150px]"
+              className="bg-white border border-white text-black min-h-[150px]"
               required
+              disabled={isSubmitting}
             />
-            <Button type="submit" className="w-full bg-[#D4AF37] hover:bg-[#B8860B] text-black font-medium py-3 rounded-md transition-colors">
-              Send Message
+            <Button 
+              type="submit" 
+              className="w-full bg-[#1a1a1a] hover:bg-[#ffde4f] hover:text-black text-white border border-black font-medium py-3 rounded-md transition-colors"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? 'Sending...' : 'Send Message'}
             </Button>
           </form>
         </div>
 
+
         {/* Right: Contact Info */}
         <div className="w-full lg:w-1/2 space-y-6 text-sm md:text-base">
           <div className="space-y-4">
-            <div className="flex items-center gap-2">
-              <Mail className="text-[#ffde4f] w-5 h-5" />
-              <a href="mailto:voicedbyjf@gmail.com" className="hover:underline">voicedbyjf@gmail.com</a>
-            </div>
-            {/* <div className="flex items-center gap-2">
-              <Linkedin className="text-[#ffde4f] w-5 h-5" />
-              <Link href="https://www.linkedin.com/in/vicki-jo-eva-502666aa/" target="_blank" className="hover:underline">
-                https://www.linkedin.com/in/vicki-jo-eva-502666aa/
-              </Link>
-            </div> */}
-            <div className="flex items-center gap-2">
-              <MessageCircle className="text-[#ffde4f] w-5 h-5" />
-              <a 
-                href="https://wa.me/918073372921" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="hover:underline"
-              >
-                +91 80733 72921
-              </a>
-            </div>
+          <a 
+            href="https://mail.google.com/mail/?view=cm&fs=1&to=voicedbyjf@gmail.com&su=Regarding%20Your%20Services&body=Hello%20Jeremy," 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="hover:text-[#ffde4f] transition-colors flex items-center gap-2"
+          >
+            <Mail className="text-[#ffde4f] w-5 h-5" />
+            voicedbyjf@gmail.com
+          </a>
+            <a 
+            href="https://wa.me/918073372921" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="hover:text-[#ffde4f] transition-colors flex items-center gap-2"
+          >
+            <Phone className="text-[#ffde4f] w-5 h-5" />
+            +91 80733 72921
+          </a>
           </div>
 
           <p>

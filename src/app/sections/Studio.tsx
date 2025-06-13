@@ -23,7 +23,7 @@ export default function Studio() {
   }, [])
 
   return (
-    <section className="bg-[#1a1a1a] text-white py-16">
+    <section className="bg-[#303030] text-white py-16">
       <div className="container mx-auto px-6 xl:px-12 grid grid-cols-1 xl:grid-cols-2 gap-12 items-stretch">
         {/* Carousel for base to lg screens */}
         <div className="block xl:hidden w-full">

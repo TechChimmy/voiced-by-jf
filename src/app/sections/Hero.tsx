@@ -43,13 +43,13 @@ export default function Hero() {
             />
 
             {/* Foreground Jeremy Image */}
-            <div className="w-full h-full absolute right-[-75%] bottom-[-15%] z-10">
+            <div className="w-full h-full absolute md:right-[-55%] md:bottom-[60%] right-[-25%] bottom-[25%] z-10">
               <Image
                 src="/jeremy.png"
                 alt="Jeremy with mic"
-                width={800}
-                height={800}
-                className="object-contain"
+                width={1200}
+                height={1200}
+                className="object-contain md:w-[1200px] md:h-[1200px] w-[600px] h-[600px]"
               />
             </div>
 
