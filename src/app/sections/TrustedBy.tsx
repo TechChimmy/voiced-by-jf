@@ -12,7 +12,7 @@ export default function TrustedBy() {
   ];
 
   return (
-    <section className="bg-white py-12 px-6 shadow-xl">
+    <section className="bg-white py-4 px-6">
       <div className="max-w-7xl mx-auto flex flex-wrap justify-evenly items-center gap-10">
         {brands.map((brand) => (
           <Image
@@ -21,7 +21,7 @@ export default function TrustedBy() {
             alt={brand.name}
             width={180}
             height={100}
-            className="object-contain grayscale hover:grayscale-0 transition duration-300"
+            className="object-contain"
           />
         ))}
       </div>

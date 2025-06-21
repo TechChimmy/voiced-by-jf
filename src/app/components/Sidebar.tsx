@@ -41,7 +41,7 @@ export default function Sidebar() {
           <div className="flex items-center gap-2 mb-10">
             <Image src="/logo.png" alt="Voiced Logo" width={200} height={200} />
           </div>
-          <nav className="flex flex-col gap-6">
+          <nav className="flex flex-col gap-6 items-center">
             {navItems.map((item, idx) => (
               <Link key={idx} href="#" className="group relative w-fit">
                 <span className="text-sm md:text-lg text-white group-hover:text-[#ffde4f] transition-colors">
