@@ -24,18 +24,21 @@ export default function Sidebar() {
 
     if (isOpen) {
       document.addEventListener('mousedown', handleOutsideClick);
+      document.body.style.overflow = 'hidden'; // Prevent scrolling when sidebar is open
     } else {
       document.removeEventListener('mousedown', handleOutsideClick);
+      document.body.style.overflow = 'auto'; // Re-enable scrolling
     }
 
     return () => {
       document.removeEventListener('mousedown', handleOutsideClick);
+      document.body.style.overflow = 'auto'; // Cleanup
     };
   }, [isOpen]);
 
   return (
     <>
-      {/* Desktop Sidebar */}
+      {/* Desktop Sidebar - Hidden on mobile */}
       <aside className="hidden md:flex flex-col justify-between bg-black text-white w-64 min-h-screen fixed px-6 py-8 z-50">
         <div>
           <div className="flex items-center gap-2 mb-10">
@@ -73,38 +76,55 @@ export default function Sidebar() {
         </div>
       </aside>
 
-      {/* Mobile Toggle Button */}
-      <div className="md:hidden fixed top-4 left-4 z-[999]">
+      {/* Mobile Navbar - Visible only on small screens */}
+      <header className="md:hidden fixed top-0 left-0 w-full bg-black text-white py-4 px-6 z-40 flex justify-between items-center shadow-md">
+        <div className="flex items-center">
+          <Link href="/" className="flex items-center">
+            <Image 
+              src="/logo.png" 
+              alt="Voiced Logo" 
+              width={120} 
+              height={40} 
+              className="h-10 w-auto"
+            />
+          </Link>
+        </div>
+        
         <button
           onClick={() => setIsOpen(true)}
-          className="text-white bg-black p-2 rounded-full shadow-lg"
+          className="text-white p-2 rounded-full focus:outline-none"
+          aria-label="Open menu"
         >
           <Menu className="w-6 h-6" />
         </button>
-      </div>
+      </header>
 
-      {/* Backdrop */}
+      {/* Mobile Sidebar Overlay */}
       {isOpen && (
-        <div className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity duration-300" />
+        <div className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-40" />
       )}
 
       {/* Mobile Sidebar */}
       <div
         ref={mobileSidebarRef}
-        className={`md:hidden fixed top-0 left-0 h-full w-64 bg-black text-white px-6 py-8 z-50 transform transition-transform duration-300 ${
-          isOpen ? 'translate-x-0' : '-translate-x-full'
+        className={`md:hidden fixed top-0 right-0 h-full w-64 bg-black text-white px-6 py-8 z-50 transform transition-transform duration-300 ease-in-out ${
+          isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
-        {/* Close Button */}
-        <button
-          onClick={() => setIsOpen(false)}
-          className="absolute top-4 right-0 text-white"
-        >
-          <X className="w-6 h-6" />
-        </button>
-
-        <div className="flex items-center gap-2 mb-10">
-          <Image src="/logo.png" alt="Voiced Logo" width={180} height={180} />
+        <div className="flex justify-between items-center mb-10">
+          <Image 
+            src="/logo.png" 
+            alt="Voiced Logo" 
+            width={150} 
+            height={50} 
+          />
+          <button
+            onClick={() => setIsOpen(false)}
+            className="text-white p-2 -mr-2"
+            aria-label="Close menu"
+          >
+            <X className="w-6 h-6" />
+          </button>
         </div>
 
         <nav className="flex flex-col gap-6 mb-8">
@@ -115,7 +135,7 @@ export default function Sidebar() {
               onClick={() => setIsOpen(false)}
               className="group relative w-fit"
             >
-              <span className="text-base text-white group-hover:text-[#ffde4f] transition-colors">
+              <span className="text-lg text-white group-hover:text-[#ffde4f] transition-colors">
                 {item}
               </span>
               <span className="absolute left-0 bottom-0 h-0.5 w-0 bg-[#ffde4f] transition-all duration-300 group-hover:w-full" />

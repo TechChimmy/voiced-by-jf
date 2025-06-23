@@ -7,7 +7,7 @@ export default function Hero() {
   const [isSpeaking, setIsSpeaking] = useState(false);
 
   return (
-    <section className="relative w-full min-h-screen bg-[#303030] flex items-center justify-center px-6 py-16 shadow-[0_0_30px_10px_rgba(0,0,0,0.95)] z-10 overflow-hidden">
+    <section className="relative w-full min-h-screen bg-[#303030] flex items-center justify-center px-6 py-16 shadow-[0_0_30px_10px_rgba(0,0,0,0.95)] z-10 overflow-hidden mt-8 md:mt-0">
       <div className="max-w-7xl w-full flex flex-col lg:flex-row items-center justify-between gap-10 px-4 lg:px-8">
 
         {/* Left Text Section */}
@@ -36,26 +36,30 @@ export default function Hero() {
         </div>
 
         {/* Right Image Section with Radial Burst */}
-        <div className="w-full max-w-[500px] lg:flex-1 flex items-center justify-center">
-          <div className="relative w-full aspect-square max-w-[600px]">
+        <div className="w-full max-w-[500px] lg:flex-1 flex items-center justify-center relative">
+          <div className="relative w-full max-w-[400px] md:max-w-[500px] aspect-square mx-auto">
 
             {/* Radial Burst Background */}
             <Image
               src="/circle-waveform.png"
               alt="Waveform Background"
-              width={1200}
-              height={1200}
-              className="absolute top-[-25%] right-[-25%] w-[250%] h-[150%] object-contain opacity-100 z-0 filter brightness-0 invert"
+              width={800}
+              height={800}
+              priority
+              sizes="(max-width: 768px) 100vw, 50vw"
+              className="absolute inset-0 w-full h-full object-contain opacity-100 z-0 filter brightness-0 invert"
             />
 
             {/* Foreground Jeremy Image */}
-            <div className="w-full h-full absolute md:right-[-55%] md:bottom-[60%] right-[-25%] bottom-[25%] z-10">
+            <div className="absolute inset-0 flex items-center justify-center z-10">
               <Image
                 src={isSpeaking ? "/jeremy-speaking.png" : "/jeremy.png"}
                 alt="Jeremy with mic"
-                width={1200}
-                height={1200}
-                className="object-contain md:w-[1200px] md:h-[1200px] w-[600px] h-[600px]"
+                width={800}
+                height={800}
+                priority
+                sizes="(max-width: 768px) 100vw, 50vw"
+                className="object-contain w-[300px] h-[300px] md:w-[500px] md:h-[500px]"
               />
             </div>
 
