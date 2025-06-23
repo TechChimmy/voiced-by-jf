@@ -1,6 +1,6 @@
 'use client'
 
-import { Mail, MessageCircle, Linkedin, Phone } from 'lucide-react'
+import { Mail, MessageCircle, Linkedin, Phone, CheckCircle, XCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
@@ -47,16 +47,16 @@ export default function ContactSection() {
       const result = await response.json()
       
       if (response.ok) {
-        setSubmitStatus({ success: true, message: 'Message sent successfully!' })
+        setSubmitStatus({ success: true, message: 'Your message has been sent successfully. I will get back to you soon!' })
         setForm({ name: '', phone: '', email: '', message: '' })
       } else {
-        throw new Error(result.error || 'Failed to send message')
+        throw new Error(result.error || 'Failed to send message. Please try again later.')
       }
     } catch (error) {
       console.error('Error submitting form:', error)
       setSubmitStatus({ 
         success: false, 
-        message: error instanceof Error ? error.message : 'Failed to send message'
+        message: error instanceof Error ? error.message : 'An unexpected error occurred. Please try again.'
       })
     } finally {
       setIsSubmitting(false)
@@ -73,10 +73,27 @@ export default function ContactSection() {
           </h2>
           <form onSubmit={handleSubmit} className="space-y-4">
             {submitStatus && (
-              <div className={`p-3 rounded-md ${
-                submitStatus.success ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+              <div className={`p-4 rounded-lg flex items-start gap-3 ${
+                submitStatus.success 
+                  ? 'bg-green-50 border border-green-200 text-green-800' 
+                  : 'bg-red-50 border border-red-200 text-red-800'
               }`}>
-                {submitStatus.message}
+                {submitStatus.success ? (
+                  <CheckCircle className="w-5 h-5 mt-0.5 flex-shrink-0" />
+                ) : (
+                  <XCircle className="w-5 h-5 mt-0.5 flex-shrink-0" />
+                )}
+                <div>
+                  <p className="font-medium">
+                    {submitStatus.success ? 'Message Sent Successfully!' : 'Error Sending Message'}
+                  </p>
+                  <p className="text-sm mt-1">{submitStatus.message}</p>
+                  {submitStatus.success && (
+                    <p className="text-xs mt-2 opacity-80">
+                      Thanks for reaching out!
+                    </p>
+                  )}
+                </div>
               </div>
             )}
             <div className="flex flex-col md:flex-row gap-4">
@@ -127,36 +144,35 @@ export default function ContactSection() {
           </form>
         </div>
 
-
         {/* Right: Contact Info */}
         <div className="w-full lg:w-1/2 space-y-6 text-sm md:text-base">
           <div className="space-y-4">
-          <a 
-            href="https://mail.google.com/mail/?view=cm&fs=1&to=voicedbyjf@gmail.com&su=Regarding%20Your%20Services&body=Hello%20Jeremy," 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="hover:text-[#ffde4f] transition-colors flex items-center gap-2"
-          >
-            <Mail className="text-[#ffde4f] w-5 h-5" />
-            voicedbyjf@gmail.com
-          </a>
             <a 
-            href="https://wa.me/918073372921" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="hover:text-[#ffde4f] transition-colors flex items-center gap-2"
-          >
-            <Phone className="text-[#ffde4f] w-5 h-5" />
-            +91 80733 72921
-          </a>
+              href="https://mail.google.com/mail/?view=cm&fs=1&to=voicedbyjf@gmail.com&su=Regarding%20Your%20Services&body=Hello%20Jeremy," 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="hover:text-[#ffde4f] transition-colors flex items-center gap-2"
+            >
+              <Mail className="text-[#ffde4f] w-5 h-5" />
+              voicedbyjf@gmail.com
+            </a>
+            <a 
+              href="https://wa.me/918073372921" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="hover:text-[#ffde4f] transition-colors flex items-center gap-2"
+            >
+              <Phone className="text-[#ffde4f] w-5 h-5" />
+              +91 80733 72921
+            </a>
           </div>
 
           <p>
-            Whether you’re an author in need of an audiobook narrator right now, or simply interested in learning more — then I’m happy to help!
+            Whether you're an author in need of an audiobook narrator right now, or simply interested in learning more — then I'm happy to help!
           </p>
           <p>
             Please feel free to get in touch, and if you need to hear more from me,
-            <strong className="text-white font-semibold"> then I’ll happily provide a custom audiobook audition </strong>
+            <strong className="text-white font-semibold"> then I'll happily provide a custom audiobook audition </strong>
             if you send over a short extract of your work along with it!
           </p>
         </div>
