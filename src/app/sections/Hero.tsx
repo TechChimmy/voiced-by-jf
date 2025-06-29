@@ -51,7 +51,7 @@ export default function Hero() {
             />
 
             {/* Foreground Jeremy Image */}
-            <div className="absolute inset-0 flex items-center justify-center z-10">
+            <div className="absolute inset-0 flex items-center justify-center z-10 -right-90">
               <Image
                 src={isSpeaking ? "/jeremy-speaking.png" : "/jeremy.png"}
                 alt="Jeremy with mic"
@@ -59,7 +59,7 @@ export default function Hero() {
                 height={800}
                 priority
                 sizes="(max-width: 768px) 100vw, 50vw"
-                className="object-contain w-[300px] h-[300px] md:w-[500px] md:h-[500px]"
+                className="object-contain w-[300px] h-[300px] md:w-[500px] md:h-[500px] "
               />
             </div>
 
