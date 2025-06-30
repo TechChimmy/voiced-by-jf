@@ -165,7 +165,7 @@ export default function ContactSection() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="mb-8"
+          className="mb-8 xl:block hidden"
         >
           Need a sample read? <br />
           Send me a short extract and I'll bring your characters to life with a custom voice audition.

@@ -39,7 +39,7 @@ export default function Sidebar() {
   return (
     <>
       {/* Desktop Sidebar - Hidden on mobile */}
-      <aside className="hidden md:flex flex-col justify-between bg-black text-white w-64 min-h-screen fixed px-6 py-8 z-50">
+      <aside className="hidden xl:flex flex-col justify-between bg-black text-white w-64 min-h-screen fixed px-6 py-8 z-50">
         <div>
           <div className="flex items-center gap-2 mb-10">
             <Image src="/logo.png" alt="Voiced Logo" width={200} height={200} />
@@ -77,15 +77,15 @@ export default function Sidebar() {
       </aside>
 
       {/* Mobile Navbar - Visible only on small screens */}
-      <header className="md:hidden fixed top-0 left-0 w-full bg-black text-white py-4 px-6 z-40 flex justify-between items-center shadow-md">
+      <header className="xl:hidden fixed top-0 left-0 w-full bg-black text-white py-4 px-6 z-40 flex justify-between items-center shadow-md">
         <div className="flex items-center">
           <Link href="/" className="flex items-center">
             <Image 
               src="/logo.png" 
               alt="Voiced Logo" 
-              width={120} 
-              height={40} 
-              className="h-10 w-auto"
+              width={150} 
+              height={50} 
+              className="h-16 w-auto"
             />
           </Link>
         </div>
@@ -101,23 +101,17 @@ export default function Sidebar() {
 
       {/* Mobile Sidebar Overlay */}
       {isOpen && (
-        <div className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-40" />
+        <div className="xl:hidden fixed inset-0 bg-black bg-opacity-50 z-40" />
       )}
 
       {/* Mobile Sidebar */}
       <div
         ref={mobileSidebarRef}
-        className={`md:hidden fixed top-0 right-0 h-full w-64 bg-black text-white px-6 py-8 z-50 transform transition-transform duration-300 ease-in-out ${
+        className={`xl:hidden fixed top-0 right-0 h-full w-64 bg-black text-white px-6 py-8 z-50 transform transition-transform duration-300 ease-in-out ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
         <div className="flex justify-between items-center mb-10">
-          <Image 
-            src="/logo.png" 
-            alt="Voiced Logo" 
-            width={150} 
-            height={50} 
-          />
           <button
             onClick={() => setIsOpen(false)}
             className="text-white p-2 -mr-2"

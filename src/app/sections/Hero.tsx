@@ -7,20 +7,20 @@ export default function Hero() {
   const [isSpeaking, setIsSpeaking] = useState(false);
 
   return (
-    <section className="relative w-full min-h-screen bg-[#303030] flex items-center justify-center px-6 py-16 shadow-[0_0_30px_10px_rgba(0,0,0,0.95)] z-10 overflow-hidden mt-8 md:mt-0">
+    <section className="relative w-full min-h-screen bg-[#303030] flex items-center justify-center px-6 py-16  overflow-hidden mt-12 md:mt-16 xl:mt-0">
       <div className="max-w-7xl w-full flex flex-col lg:flex-row items-center justify-between gap-10 px-4 lg:px-8">
 
         {/* Left Text Section */}
         <div className="text-white w-full lg:flex-1 max-w-2xl z-10">
           <h1 className="text-4xl md:text-6xl font-bold text-[#ffde4f] mb-8 lg:mb-12">
-            Hi! I'm Jeremy ...
+            Hi, I'm Jeremy ...
           </h1>
 
           <p className="text-white text-xl mb-6 leading-relaxed">
             ... a professional voiceover artist specializing in neutral Indian English and conversational Tamil.
           </p>
 
-          <p className="text-white text-xl mb-8 leading-loose">
+          <p className="text-white text-xl mb-8 leading-relaxed">
             Whether it's a roller-coaster of an audiobook, a punchy ad, a heartfelt corporate video, or an easy-to-understand explainer video, I love using my voice to do exactly what you want your script to do.
           </p>
 
@@ -51,7 +51,7 @@ export default function Hero() {
             />
 
             {/* Foreground Jeremy Image */}
-            <div className="absolute inset-0 flex items-center justify-center z-10 -right-90">
+            <div className="absolute inset-0 flex items-center justify-center z-10  xl:-right-90">
               <Image
                 src={isSpeaking ? "/jeremy-speaking.png" : "/jeremy.png"}
                 alt="Jeremy with mic"

@@ -139,30 +139,30 @@ export default function Works() {
 
   const variants: Variants = {
     enter: (direction: number) => ({
-      x: direction > 0 ? 1000 : -1000,
+      x: direction > 0 ? 300 : -300,
       opacity: 0,
       transition: {
-        x: { type: "tween", duration: 0.2 },
-        opacity: { duration: 0.1 }
+        x: { type: "spring", stiffness: 130, damping: 22 },
+        opacity: { duration: 0.15 }
       }
     }),
     center: {
       x: 0,
       opacity: 1,
       transition: {
-        x: { type: "tween", duration: 0.2 },
-        opacity: { duration: 0.1 }
+        x: { type: "spring", stiffness: 130, damping: 22 },
+        opacity: { duration: 0.15 }
       }
     },
     exit: (direction: number) => ({
-      x: direction < 0 ? 1000 : -1000,
+      x: direction < 0 ? 300 : -300,
       opacity: 0,
       transition: {
-        x: { type: "tween", duration: 0.2 },
-        opacity: { duration: 0.1 }
+        x: { type: "spring", stiffness: 130, damping: 22 },
+        opacity: { duration: 0.15 }
       }
     })
-  };
+  }
 
   const swipeHandlers = useSwipeable({
     onSwipedLeft: nextSlide,
@@ -177,7 +177,7 @@ export default function Works() {
     >
       <div className="container mx-auto px-4 py-8 xl:py-16 relative z-10">
         <div className="relative">
-          <AnimatePresence mode="wait" custom={direction} initial={false}>
+          <AnimatePresence mode="popLayout" custom={direction} initial={false}>
             <motion.div
               key={currentDot}
               custom={direction}
@@ -185,7 +185,7 @@ export default function Works() {
               initial="enter"
               animate="center"
               exit="exit"
-              transition={{ type: "tween", duration: 0.2 }}
+              transition={{ type: "tween", duration: 0.1 }}
               className="flex justify-center items-center gap-6 flex-wrap xl:flex-nowrap"
             >
               {getCurrentSlideCards().map((item, index) => (
@@ -194,7 +194,7 @@ export default function Works() {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.15, delay: index * 0.02 }}
-                  className="w-full xl:w-[30%] h-[500px] md:h-[560px] xl:h-[520px] bg-white rounded-2xl p-6 shadow-lg flex flex-col justify-between"
+                  className="w-[300px] xl:w-[30%] h-[500px] md:h-[560px] xl:h-[520px] bg-white rounded-2xl p-6 shadow-lg flex flex-col justify-between"
                 >
                   <div>
                     <div className="aspect-video mb-4 rounded-lg overflow-hidden">
@@ -207,7 +207,7 @@ export default function Works() {
                       />
                     </div>
                     <h2 className="text-2xl font-bold text-gray-800 mb-4">{item.title}</h2>
-                    <p className="text-gray-600 mb-6 leading-relaxed">{item.description}</p>
+                    <p className="text-gray-600 mb-2 leading-relaxed">{item.description}</p>
                   </div>
                   <div className="mt-auto">
                     <div className="flex items-center justify-start mb-4">
@@ -246,8 +246,7 @@ export default function Works() {
         </div>
       </div>
 
-      {/* Chevron Buttons only on xl and above */}
-      <div className="hidden xl:block absolute left-4 top-1/2 -translate-y-1/2 z-20">
+      <div className="absolute left-2 xl:left-4 top-1/2 -translate-y-1/2 z-20">
         <motion.div
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
@@ -255,14 +254,14 @@ export default function Works() {
           <Button
             onClick={prevSlide}
             size="icon"
-            className="rounded-full w-12 h-12 bg-white hover:bg-gray-100 text-gray-800 shadow-lg p-0"
+            className="rounded-full w-8 h-8 xl:w-12 xl:h-12 bg-white hover:bg-gray-100 text-gray-800 shadow-lg p-0"
           >
-            <ChevronLeft className="w-6 h-6" />
+            <ChevronLeft className="w-4 h-4 xl:w-6 xl:h-6" />
           </Button>
         </motion.div>
       </div>
 
-      <div className="hidden xl:block absolute right-4 top-1/2 -translate-y-1/2 z-20">
+      <div className="absolute right-2 xl:right-4 top-1/2 -translate-y-1/2 z-20">
         <motion.div
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
@@ -270,9 +269,9 @@ export default function Works() {
           <Button
             onClick={nextSlide}
             size="icon"
-            className="rounded-full w-12 h-12 bg-white hover:bg-gray-100 text-gray-800 shadow-lg p-0"
+            className="rounded-full w-8 h-8 xl:w-12 xl:h-12 bg-white hover:bg-gray-100 text-gray-800 shadow-lg p-0"
           >
-            <ChevronRight className="w-6 h-6" />
+            <ChevronRight className="w-4 h-4 xl:w-6 xl:h-6" />
           </Button>
         </motion.div>
       </div>

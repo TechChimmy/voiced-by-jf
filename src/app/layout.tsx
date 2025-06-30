@@ -22,13 +22,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`relative ${montserrat.className} select-none`}>
-        <div className="flex min-h-screen bg-[#303030]">
-          {/* No visibility classes here — Sidebar manages it itself */}
+      <body className={`relative ${montserrat.className} select-none bg-black overflow-hidden`}>
+        <div className="flex min-h-screen bg-black">
           <Sidebar />
-
-          {/* Main content */}
-          <main className="flex-1 ml-0 md:ml-[260px] transition-all duration-300">
+          <main className="flex-1 ml-0 xl:ml-[260px] transition-all duration-300 overflow-hidden">
             {children}
           </main>
         </div>
