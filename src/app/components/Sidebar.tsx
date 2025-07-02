@@ -81,7 +81,7 @@ export default function Sidebar() {
         <div className="flex items-center">
           <Link href="/" className="flex items-center">
             <Image 
-              src="/logo.png" 
+              src="/logo.png"
               alt="Voiced Logo" 
               width={150} 
               height={50} 

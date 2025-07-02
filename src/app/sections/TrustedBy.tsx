@@ -42,8 +42,8 @@ export default function TrustedBy() {
   return (
     <section className="bg-white py-4 px-6">
       {/* Static Desktop View */}
-      <div className="hidden xl:block">
-        <div className="max-w-7xl mx-auto flex flex-wrap justify-evenly items-center gap-10">
+      <div className="hidden md:block">
+        <div className="max-w-7xl mx-auto flex flex-wrap justify-evenly items-center md:gap-5 xl:gap-10">
           {brands.map((brand) => (
             <Image
               key={brand.name}
@@ -51,14 +51,14 @@ export default function TrustedBy() {
               alt={brand.name}
               width={180}
               height={100}
-              className="object-contain"
+              className="object-contain md:w-[100px] xl:w-[150px]"
             />
           ))}
         </div>
       </div>
 
       {/* Marquee View (for sm, md, lg) */}
-      <div className="xl:hidden relative overflow-hidden w-full">
+      <div className="md:hidden relative overflow-hidden w-full">
         <div
           ref={marqueeRef}
           className="flex flex-row items-center whitespace-nowrap will-change-transform"
@@ -71,7 +71,7 @@ export default function TrustedBy() {
                 alt={brand.name}
                 width={100}
                 height={60}
-                className="object-contain"
+                className="object-contain md:w-[100px] xl:w-[150px]"
               />
             </div>
           ))}

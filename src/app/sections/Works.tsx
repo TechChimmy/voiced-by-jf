@@ -93,9 +93,11 @@ export default function Works() {
     const updateCardsPerSlide = () => {
       const width = window.innerWidth
       if (width >= 1280) {
-        setCardsPerSlide(3)
+        setCardsPerSlide(3) // xl screens
+      } else if (width >= 768) {
+        setCardsPerSlide(2) // md screens
       } else {
-        setCardsPerSlide(1)
+        setCardsPerSlide(1) // mobile screens
       }
     }
 
@@ -105,31 +107,20 @@ export default function Works() {
   }, [])
 
   const getCurrentSlideCards = () => {
-    if (cardsPerSlide === 1) {
-      const realIndex = currentDot % contentData.length
-      return [contentData[realIndex]]
-    } else {
-      const start = currentDot * cardsPerSlide
-      return contentData.slice(start, start + cardsPerSlide)
-    }
+    const slidesCount = Math.ceil(contentData.length / cardsPerSlide)
+    const slideIndex = currentDot % slidesCount
+    const start = slideIndex * cardsPerSlide
+    return contentData.slice(start, start + cardsPerSlide)
   }
 
   const nextSlide = () => {
     setDirection(1)
-    if (cardsPerSlide === 1) {
-      setCurrentDot((prev) => (prev + 1) % contentData.length)
-    } else {
-      setCurrentDot((prev) => (prev + 1) % DOT_COUNT)
-    }
+    setCurrentDot((prev) => (prev + 1) % DOT_COUNT)
   }
 
   const prevSlide = () => {
     setDirection(-1)
-    if (cardsPerSlide === 1) {
-      setCurrentDot((prev) => (prev - 1 + contentData.length) % contentData.length)
-    } else {
-      setCurrentDot((prev) => (prev - 1 + DOT_COUNT) % DOT_COUNT)
-    }
+    setCurrentDot((prev) => (prev - 1 + DOT_COUNT) % DOT_COUNT)
   }
 
   const goToSlide = (index: number) => {
@@ -194,7 +185,7 @@ export default function Works() {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.15, delay: index * 0.02 }}
-                  className="w-[300px] xl:w-[30%] h-[500px] md:h-[560px] xl:h-[520px] bg-white rounded-2xl p-6 shadow-lg flex flex-col justify-between"
+                  className="w-[300px] xl:w-[30%] h-[500px] md:h-[520px] bg-white rounded-2xl p-6 shadow-lg flex flex-col justify-between"
                 >
                   <div>
                     <div className="aspect-video mb-4 rounded-lg overflow-hidden">
@@ -233,13 +224,9 @@ export default function Works() {
               whileHover={{ scale: 1.2 }}
               whileTap={{ scale: 0.9 }}
               className={`w-3 h-3 rounded-full cursor-pointer transition-all duration-300 ${
-                cardsPerSlide === 1
-                  ? currentDot % DOT_COUNT === i
-                    ? 'bg-gray-800 scale-110'
-                    : 'bg-white'
-                  : currentDot === i
-                    ? 'bg-gray-800 scale-110'
-                    : 'bg-white'
+                currentDot === i
+                  ? 'bg-gray-800 scale-110'
+                  : 'bg-white'
               }`}
             />
           ))}
