@@ -12,15 +12,15 @@ export default function Hero() {
 
         {/* Left Text Section */}
         <div className="text-white w-full lg:flex-1 max-w-2xl z-10">
-          <h1 className="text-4xl md:text-6xl font-bold text-[#ffde4f] mb-8 lg:mb-12">
+          <h1 className="text-3xl md:text-6xl font-bold text-[#ffde4f] mb-8 lg:mb-12">
             Hi, I'm Jeremy ...
           </h1>
 
-          <p className="text-white text-xl mb-6 leading-relaxed">
+          <p className="text-white text-lg md:text-xl mb-6 leading-relaxed">
             ... a professional voiceover artist specializing in neutral Indian English and conversational Tamil.
           </p>
 
-          <p className="text-white text-xl mb-8 leading-relaxed">
+          <p className="text-white text-lg md:text-xl mb-8 leading-relaxed">
             Whether it's a roller-coaster of an audiobook, a punchy ad, a heartfelt corporate video, or an easy-to-understand explainer video, I love using my voice to do exactly what you want your script to do.
           </p>
 
