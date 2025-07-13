@@ -15,6 +15,7 @@ const contentData = [
     description:
       "From gripping non-fiction to immersive fiction, my voice adapts to your narrative's every twist.",
     buttonText: 'More Audiobook Samples',
+    downloadLink: '/audio/audiobook-sample.mp3',
   },
   {
     title: 'D2C Ads',
@@ -23,6 +24,7 @@ const contentData = [
     description:
       'Make your brand/product relatable and unforgettable with a voiceover that resonates long after that first listen.',
     buttonText: 'More Ad Samples',
+    downloadLink: '/audio/d2c-sample.mp3',
   },
   {
     title: 'Corporate Videos',
@@ -31,54 +33,61 @@ const contentData = [
     description:
       "Professional, yet personable and earnest... tailored to reflect your brand's unique tone and style.",
     buttonText: 'See Corporate Narrations',
+    downloadLink: '/audio/corporate-sample.mp3',
   },
   {
-    title: 'E-Learning',
+    title: 'Audiobooks',
     image: '/thumb.jpg',
     alt: 'Headphones',
     description:
-      'Clear, engaging narration that makes complex topics accessible and keeps learners focused throughout their journey.',
-    buttonText: 'View E-Learning Samples',
+      "From gripping non-fiction to immersive fiction, my voice adapts to your narrative's every twist.",
+    buttonText: 'More Audiobook Samples',
+    downloadLink: '/audio/audiobook-sample.mp3',
   },
   {
-    title: 'Podcasts',
+    title: 'D2C Ads',
     image: '/thumb.jpg',
     alt: 'Headphones',
     description:
-      'Warm, conversational delivery that builds connection with your audience and keeps them coming back for more.',
-    buttonText: 'Listen to Podcast Demos',
+      'Make your brand/product relatable and unforgettable with a voiceover that resonates long after that first listen.',
+    buttonText: 'More Ad Samples',
+    downloadLink: '/audio/d2c-sample.mp3',
   },
   {
-    title: 'Video Games',
+    title: 'Corporate Videos',
     image: '/thumb.jpg',
     alt: 'Headphones',
     description:
-      'Dynamic character voices and immersive storytelling that brings your game world to life with authentic emotion.',
-    buttonText: 'Explore Gaming Voices',
+      "Professional, yet personable and earnest... tailored to reflect your brand's unique tone and style.",
+    buttonText: 'See Corporate Narrations',
+    downloadLink: '/audio/corporate-sample.mp3',
   },
   {
-    title: 'Commercials',
+    title: 'Audiobooks',
     image: '/thumb.jpg',
     alt: 'Headphones',
     description:
-      'Compelling, memorable voiceovers that cut through the noise and drive action with every word spoken.',
-    buttonText: 'Commercial Voice Reels',
+      "From gripping non-fiction to immersive fiction, my voice adapts to your narrative's every twist.",
+    buttonText: 'More Audiobook Samples',
+    downloadLink: '/audio/audiobook-sample.mp3',
   },
   {
-    title: 'Documentaries',
+    title: 'D2C Ads',
     image: '/thumb.jpg',
     alt: 'Headphones',
     description:
-      'Authoritative yet approachable narration that guides viewers through compelling stories with clarity and gravitas.',
-    buttonText: 'Documentary Samples',
+      'Make your brand/product relatable and unforgettable with a voiceover that resonates long after that first listen.',
+    buttonText: 'More Ad Samples',
+    downloadLink: '/audio/d2c-sample.mp3',
   },
   {
-    title: 'IVR & Phone Systems',
+    title: 'Corporate Videos',
     image: '/thumb.jpg',
     alt: 'Headphones',
     description:
-      "Professional, clear phone system voices that enhance customer experience and reflect your brand's reliability.",
-    buttonText: 'IVR Voice Samples',
+      "Professional, yet personable and earnest... tailored to reflect your brand's unique tone and style.",
+    buttonText: 'See Corporate Narrations',
+    downloadLink: '/audio/corporate-sample.mp3',
   },
 ]
 
@@ -87,17 +96,17 @@ const DOT_COUNT = 3
 export default function Works() {
   const [cardsPerSlide, setCardsPerSlide] = useState(3)
   const [currentDot, setCurrentDot] = useState(0)
-  const [direction, setDirection] = useState(0) // 0: no direction, 1: right, -1: left
+  const [direction, setDirection] = useState(0)
 
   useEffect(() => {
     const updateCardsPerSlide = () => {
       const width = window.innerWidth
       if (width >= 1280) {
-        setCardsPerSlide(3) // xl screens
+        setCardsPerSlide(3)
       } else if (width >= 768) {
-        setCardsPerSlide(2) // md screens
+        setCardsPerSlide(2)
       } else {
-        setCardsPerSlide(1) // mobile screens
+        setCardsPerSlide(1)
       }
     }
 
@@ -201,9 +210,30 @@ export default function Works() {
                     <p className="text-gray-600 mb-2 leading-relaxed">{item.description}</p>
                   </div>
                   <div className="mt-auto">
-                    <div className="flex items-center justify-start mb-4">
-                      <Button size="default" className="rounded-full bg-gray-800 hover:bg-gray-700">
+                    <div className="flex items-center justify-start gap-3 mb-4">
+                      <Button size="icon" className="rounded-full bg-gray-800 hover:bg-gray-700">
                         <Play className="w-5 h-5 fill-white" />
+                      </Button>
+                      <Button
+                        size="icon"
+                        className="rounded-full bg-gray-800 hover:bg-gray-700"
+                        onClick={() => {
+                          const link = document.createElement('a')
+                          link.href = item.downloadLink
+                          link.download = item.downloadLink.split('/').pop() || 'sample.mp3'
+                          link.click()
+                        }}
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="w-5 h-5 text-white"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          strokeWidth={2}
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V4" />
+                        </svg>
                       </Button>
                     </div>
                     <Button className="w-full bg-gray-800 hover:bg-gray-700 text-white rounded-full py-3">
@@ -224,9 +254,7 @@ export default function Works() {
               whileHover={{ scale: 1.2 }}
               whileTap={{ scale: 0.9 }}
               className={`w-3 h-3 rounded-full cursor-pointer transition-all duration-300 ${
-                currentDot === i
-                  ? 'bg-gray-800 scale-110'
-                  : 'bg-white'
+                currentDot === i ? 'bg-gray-800 scale-110' : 'bg-white'
               }`}
             />
           ))}
@@ -234,10 +262,7 @@ export default function Works() {
       </div>
 
       <div className="absolute left-2 xl:left-4 top-1/2 -translate-y-1/2 z-20">
-        <motion.div
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-        >
+        <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
           <Button
             onClick={prevSlide}
             size="icon"
@@ -249,10 +274,7 @@ export default function Works() {
       </div>
 
       <div className="absolute right-2 xl:right-4 top-1/2 -translate-y-1/2 z-20">
-        <motion.div
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-        >
+        <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
           <Button
             onClick={nextSlide}
             size="icon"

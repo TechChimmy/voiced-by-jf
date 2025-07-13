@@ -5,7 +5,12 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Menu, X } from 'lucide-react';
 
-const navItems = ['Samples', 'My Story', 'FAQs', 'Menu'];
+const navItems = [
+  { name: 'Home', path: '/' },
+  { name: 'Samples', path: '/samples' },
+  { name: 'My Story', path: '/story' },
+  { name: 'FAQs', path: '/faqs' }
+];
 
 export default function Sidebar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -46,9 +51,13 @@ export default function Sidebar() {
           </div>
           <nav className="flex flex-col gap-6 items-center">
             {navItems.map((item, idx) => (
-              <Link key={idx} href="#" className="group relative w-fit">
+              <Link 
+                key={idx} 
+                href={item.path} 
+                className="group relative w-fit"
+              >
                 <span className="text-sm md:text-lg text-white group-hover:text-[#ffde4f] transition-colors">
-                  {item}
+                  {item.name}
                 </span>
                 <span className="absolute left-0 bottom-0 h-0.5 w-0 bg-[#ffde4f] transition-all duration-300 group-hover:w-full" />
               </Link>
@@ -125,12 +134,12 @@ export default function Sidebar() {
           {navItems.map((item, idx) => (
             <Link
               key={idx}
-              href="#"
+              href={item.path}
               onClick={() => setIsOpen(false)}
               className="group relative w-fit"
             >
               <span className="text-lg text-white group-hover:text-[#ffde4f] transition-colors">
-                {item}
+                {item.name}
               </span>
               <span className="absolute left-0 bottom-0 h-0.5 w-0 bg-[#ffde4f] transition-all duration-300 group-hover:w-full" />
             </Link>
