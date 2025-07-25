@@ -4,7 +4,7 @@ import Image from 'next/image';
 
 export default function Hero() {
   return (
-    <section className="relative w-full min-h-[700px] md:min-h-[700px] lg:min-h-screen bg-[#303030] flex items-center justify-center px-6 overflow-hidden mt-12 md:mt-8 xl:mt-0">
+    <section className="relative w-full min-h-[700px] md:min-h-[700px] lg:min-h-screen bg-[#303030] flex items-center justify-center px-6 overflow-hidden mt-16 md:mt-12 xl:mt-0">
       <div className="max-w-7xl w-full flex flex-col lg:flex-row items-center justify-between gap-10 px-4 lg:px-8 relative">
 
         {/* Left Text Section */}
