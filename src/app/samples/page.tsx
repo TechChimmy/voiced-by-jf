@@ -130,12 +130,14 @@ const SampleNextArrow = (props: any) => {
   const { className, style, onClick } = props;
   return (
     <div
-      className={`${className} !flex items-center justify-center w-10 h-10 rounded-full bg-black/30 backdrop-blur-sm hover:bg-black/50 transition-all`}
+      className={`${className} !flex items-center justify-center w-10 h-10 rounded-full bg-black/30 hover:bg-black/50 transition-all`}
       style={{ 
         ...style, 
         display: "flex !important",
         right: "10px",
-        zIndex: 1,
+        zIndex: 10,
+        color: '#ffde4f !important',
+        opacity: '1 !important'
       }}
       onClick={onClick}
     >
@@ -148,12 +150,14 @@ const SamplePrevArrow = (props: any) => {
   const { className, style, onClick } = props;
   return (
     <div
-      className={`${className} !flex items-center justify-center w-10 h-10 rounded-full bg-black/30 backdrop-blur-sm hover:bg-black/50 transition-all`}
+      className={`${className} !flex items-center justify-center w-10 h-10 rounded-full bg-black/30 hover:bg-black/50 transition-all`}
       style={{ 
         ...style, 
         display: "flex !important",
         left: "10px",
-        zIndex: 1,
+        zIndex: 10,
+        color: '#ffde4f !important',
+        opacity: '1 !important'
       }}
       onClick={onClick}
     >
