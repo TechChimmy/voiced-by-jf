@@ -30,7 +30,6 @@ export default function Hero() {
       a.click();
       URL.revokeObjectURL(url);
     } catch {
-      // fallback: direct link download
       const a = document.createElement('a');
       a.href = s.file;
       a.download = `Jeremy-Francis-${s.label}.mp3`;
@@ -39,6 +38,7 @@ export default function Hero() {
       setTimeout(() => setDownloadingIdx(null), 1200);
     }
   };
+
   const animFrameRef = useRef<number>(0);
   const offsetRef = useRef(0);
 
@@ -67,7 +67,6 @@ export default function Hero() {
       const w = canvas.offsetWidth;
       const h = canvas.offsetHeight;
       ctx.clearRect(0, 0, w, h);
-
       const barWidth = w / bars;
       const centerY = h / 2;
 
@@ -77,22 +76,15 @@ export default function Hero() {
         const wave2 = Math.sin((i / bars) * Math.PI * 6 - t * 0.8) * 0.3;
         const wave3 = Math.cos((i / bars) * Math.PI * 2 + t * 0.5) * 0.2;
         const combined = (wave1 + wave2 + wave3) * amplitudes[i];
-
         const barH = Math.max(3, Math.abs(combined) * h * 0.42);
         const x = i * barWidth + barWidth * 0.18;
         const bw = barWidth * 0.52;
-
-        const alpha = isPlaying
-          ? 0.55 + Math.abs(combined) * 0.45
-          : 0.18 + Math.abs(combined) * 0.14;
-
+        const alpha = isPlaying ? 0.55 + Math.abs(combined) * 0.45 : 0.18 + Math.abs(combined) * 0.14;
         const progress = i / bars;
         const hue = 42 + progress * 10;
         const sat = 95 - progress * 10;
         const lit = 52 + progress * 8;
-
         ctx.fillStyle = `hsla(${hue}, ${sat}%, ${lit}%, ${alpha})`;
-
         const radius = bw / 2;
         ctx.beginPath();
         ctx.roundRect(x, centerY - barH, bw, barH, [radius, radius, 2, 2]);
@@ -112,6 +104,73 @@ export default function Hero() {
       window.removeEventListener('resize', resize);
     };
   }, [isPlaying]);
+
+  // Shared sample card renderer to avoid duplication
+  const renderSampleCard = (s: typeof samples[0], i: number, extraClass = '') => (
+    <button
+      key={s.label}
+      onClick={() => setPlayingSample(playingSample === i ? null : i)}
+      className={`sample-card ${extraClass} flex items-center gap-3 rounded-2xl px-4 py-3 w-full text-left cursor-pointer`}
+      style={{
+        background: playingSample === i ? 'rgba(255,222,79,0.08)' : 'rgba(255,255,255,0.03)',
+        border: `1px solid ${playingSample === i ? 'rgba(255,222,79,0.25)' : 'rgba(255,255,255,0.07)'}`,
+        backdropFilter: 'blur(12px)',
+        WebkitBackdropFilter: 'blur(12px)',
+      }}
+    >
+      <span
+        className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0"
+        style={{
+          background: playingSample === i ? '#ffde4f' : 'rgba(255,222,79,0.10)',
+          border: '1px solid rgba(255,222,79,0.2)',
+        }}
+      >
+        {playingSample === i ? (
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="#181818">
+            <rect x="5" y="4" width="4" height="16" rx="1" />
+            <rect x="15" y="4" width="4" height="16" rx="1" />
+          </svg>
+        ) : (
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="#ffde4f">
+            <path d="M6 4l14 8-14 8V4z" />
+          </svg>
+        )}
+      </span>
+
+      <div className="flex flex-col gap-0.5 min-w-0 flex-1">
+        <span
+          className="font-tenor text-[11px] tracking-[0.12em] uppercase"
+          style={{ color: playingSample === i ? '#ffde4f' : 'rgba(245,240,232,0.7)' }}
+        >
+          {s.label}
+        </span>
+        <span className="font-dm text-[11px]" style={{ color: 'rgba(245,240,232,0.28)' }}>
+          {s.duration}
+        </span>
+      </div>
+
+      <span
+        className="dl-btn w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0"
+        onClick={(e) => handleDownload(e, s, i)}
+        title={`Download ${s.label}`}
+        style={{
+          background: downloadingIdx === i ? '#ffde4f' : 'rgba(255,222,79,0.12)',
+          border: '1px solid rgba(255,222,79,0.25)',
+        }}
+      >
+        {downloadingIdx === i ? (
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#181818" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+        ) : (
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ffde4f" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12 3v13M5 16l7 7 7-7" />
+            <path d="M3 21h18" />
+          </svg>
+        )}
+      </span>
+    </button>
+  );
 
   return (
     <>
@@ -193,6 +252,15 @@ export default function Hero() {
           pointer-events: auto;
         }
 
+        /* Always show download on touch devices */
+        @media (hover: none) {
+          .sample-card .dl-btn {
+            opacity: 1 !important;
+            transform: scale(1) !important;
+            pointer-events: auto !important;
+          }
+        }
+
         .play-btn-primary {
           transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
         }
@@ -212,7 +280,6 @@ export default function Hero() {
           transform: scale(1.03);
         }
 
-        /* image frame glow */
         .img-frame {
           box-shadow:
             0 0 0 1px rgba(255,222,79,0.12),
@@ -226,42 +293,30 @@ export default function Hero() {
         style={{ background: '#0d0b07' }}
       >
         {/* Warm radial glow — left */}
-        <div
-          className="absolute pointer-events-none z-[1]"
-          style={{
-            width: '700px', height: '700px',
-            top: '50%', left: '20%',
-            transform: 'translate(-50%, -50%)',
-            background: 'radial-gradient(circle, rgba(255,210,60,0.06) 0%, transparent 65%)',
-            borderRadius: '50%',
-          }}
-        />
+        <div className="absolute pointer-events-none z-[1]" style={{
+          width: '700px', height: '700px', top: '50%', left: '20%',
+          transform: 'translate(-50%, -50%)',
+          background: 'radial-gradient(circle, rgba(255,210,60,0.06) 0%, transparent 65%)',
+          borderRadius: '50%',
+        }} />
+
         {/* Warm radial glow — right */}
-        <div
-          className="absolute pointer-events-none z-[1]"
-          style={{
-            width: '500px', height: '700px',
-            top: '50%', right: '-5%',
-            transform: 'translateY(-50%)',
-            background: 'radial-gradient(circle, rgba(255,210,60,0.04) 0%, transparent 70%)',
-            borderRadius: '50%',
-          }}
-        />
+        <div className="absolute pointer-events-none z-[1]" style={{
+          width: '500px', height: '700px', top: '50%', right: '-5%',
+          transform: 'translateY(-50%)',
+          background: 'radial-gradient(circle, rgba(255,210,60,0.04) 0%, transparent 70%)',
+          borderRadius: '50%',
+        }} />
 
         {/* Bottom rule */}
-        <div
-          className="absolute bottom-0 left-0 right-0 h-px z-[2]"
-          style={{ background: 'linear-gradient(90deg, transparent, rgba(255,222,79,0.18) 30%, rgba(255,222,79,0.18) 70%, transparent)' }}
-        />
+        <div className="absolute bottom-0 left-0 right-0 h-px z-[2]" style={{
+          background: 'linear-gradient(90deg, transparent, rgba(255,222,79,0.18) 30%, rgba(255,222,79,0.18) 70%, transparent)'
+        }} />
 
         {/* Side label */}
         <span
           className="font-tenor absolute right-6 top-1/2 text-[9px] tracking-[0.28em] uppercase whitespace-nowrap z-10 hidden lg:block"
-          style={{
-            color: 'rgba(255,222,79,0.22)',
-            transform: 'translateY(-50%) rotate(90deg)',
-            transformOrigin: 'center',
-          }}
+          style={{ color: 'rgba(255,222,79,0.22)', transform: 'translateY(-50%) rotate(90deg)', transformOrigin: 'center' }}
         >
           Voice&nbsp;·&nbsp;Narration&nbsp;·&nbsp;Storytelling
         </span>
@@ -273,24 +328,18 @@ export default function Hero() {
           <div className="flex flex-col items-start">
 
             {/* Eyebrow */}
-            <p
-              className="hero-label font-tenor fade-1 flex items-center gap-3 mb-6 text-[10px] tracking-[0.32em] uppercase"
-              style={{ color: '#ffde4f', opacity: 0.65 }}
-            >
+            <p className="hero-label font-tenor fade-1 flex items-center gap-3 mb-6 text-[10px] tracking-[0.32em] uppercase"
+              style={{ color: '#ffde4f', opacity: 0.65 }}>
               Voiceover Artist
             </p>
 
             {/* Name */}
-            <h1
-              className="font-bebas fade-2 leading-[0.88] tracking-[0.02em] mb-0"
-              style={{ fontSize: 'clamp(64px, 9vw, 130px)', color: '#f5f0e8' }}
-            >
+            <h1 className="font-bebas fade-2 leading-[0.88] tracking-[0.02em] mb-0"
+              style={{ fontSize: 'clamp(64px, 9vw, 130px)', color: '#f5f0e8' }}>
               Jeremy
             </h1>
-            <h1
-              className="font-bebas fade-2 leading-[0.88] tracking-[0.02em] mb-6"
-              style={{ fontSize: 'clamp(64px, 9vw, 130px)', color: '#f5f0e8' }}
-            >
+            <h1 className="font-bebas fade-2 leading-[0.88] tracking-[0.02em] mb-6"
+              style={{ fontSize: 'clamp(64px, 9vw, 130px)', color: '#f5f0e8' }}>
               <span style={{ color: '#ffde4f' }}>Francis</span>
             </h1>
 
@@ -300,25 +349,21 @@ export default function Hero() {
             </div>
 
             {/* Tagline */}
-            <p
-              className="font-cormorant fade-4 italic mb-4 leading-snug"
-              style={{ fontSize: 'clamp(18px, 2.2vw, 26px)', color: '#c8bfa0' }}
-            >
+            <p className="font-cormorant fade-4 italic mb-4 leading-snug"
+              style={{ fontSize: 'clamp(18px, 2.2vw, 26px)', color: '#c8bfa0' }}>
               The voice that makes your script{' '}
               <span className="not-italic" style={{ color: '#ffde4f' }}>land.</span>
             </p>
 
             {/* Description */}
-            <p
-              className="font-dm font-light fade-5 leading-[1.85] mb-10"
+            <p className="font-dm font-light fade-5 leading-[1.85] mb-10"
               style={{
                 fontSize: 'clamp(13px, 1.3vw, 15px)',
                 color: 'rgba(245,240,232,0.42)',
                 maxWidth: '480px',
                 borderLeft: '2px solid rgba(255,222,79,0.18)',
                 paddingLeft: '16px',
-              }}
-            >
+              }}>
               Neutral Indian English. Conversational Tamil. Audiobooks, ads,
               corporate films, explainers — whatever the brief, the delivery
               is always exactly what you had in mind.
@@ -326,24 +371,17 @@ export default function Hero() {
 
             {/* CTA row */}
             <div className="fade-6 flex items-center gap-4 flex-wrap">
-              {/* Play CTA */}
               <button
                 onClick={() => setIsPlaying(p => !p)}
                 aria-label={isPlaying ? 'Pause demo' : 'Play voice demo'}
                 className="play-btn-primary font-dm font-medium flex items-center gap-3 rounded-full cursor-pointer"
                 style={{
-                  background: '#ffde4f',
-                  color: '#181818',
-                  border: 'none',
-                  padding: '13px 26px 13px 16px',
-                  fontSize: '13px',
-                  letterSpacing: '0.05em',
+                  background: '#ffde4f', color: '#181818', border: 'none',
+                  padding: '13px 26px 13px 16px', fontSize: '13px', letterSpacing: '0.05em',
                 }}
               >
-                <span
-                  className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0"
-                  style={{ background: '#181818' }}
-                >
+                <span className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0"
+                  style={{ background: '#181818' }}>
                   {isPlaying ? (
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="#ffde4f">
                       <rect x="5" y="4" width="4" height="16" rx="1" />
@@ -358,137 +396,63 @@ export default function Hero() {
                 {isPlaying ? 'Listening…' : 'Hear my Voice'}
               </button>
 
-              {/* Get in touch */}
-              <a
-                href="https://wa.me/918073372921"
-                target="_blank"
-                rel="noopener noreferrer"
+              <a href="https://wa.me/918073372921" target="_blank" rel="noopener noreferrer"
                 className="btn-secondary font-dm font-normal flex items-center gap-2 rounded-full cursor-pointer"
                 style={{
-                  background: 'transparent',
-                  color: 'rgba(245,240,232,0.45)',
+                  background: 'transparent', color: 'rgba(245,240,232,0.45)',
                   border: '1px solid rgba(245,240,232,0.14)',
-                  padding: '13px 22px',
-                  fontSize: '13px',
-                  letterSpacing: '0.05em',
-                  textDecoration: 'none',
-                }}
-              >
+                  padding: '13px 22px', fontSize: '13px', letterSpacing: '0.05em', textDecoration: 'none',
+                }}>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
                   <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
                 </svg>
                 Get in touch
               </a>
             </div>
+
+            {/* ══ MOBILE ONLY: photo + samples (xl:hidden) ══ */}
+            <div className="xl:hidden w-full mt-12 flex flex-col gap-6">
+
+              {/* Photo — full width, tall enough to feel impactful */}
+              <div className="img-frame relative w-full rounded-2xl overflow-hidden"
+                style={{ height: '340px', border: '1px solid rgba(255,222,79,0.12)' }}>
+                <div className="absolute bottom-0 left-0 right-0 h-24 z-10 pointer-events-none"
+                  style={{ background: 'linear-gradient(to top, rgba(13,11,7,0.85), transparent)' }} />
+                <Image src="/jeremy.jpeg" alt="Jeremy Francis" fill className="object-cover object-top" priority />
+              </div>
+
+              {/* Section label */}
+              <div className="flex items-center gap-3">
+                <div style={{ width: '24px', height: '1px', background: 'rgba(255,222,79,0.35)' }} />
+                <p className="font-tenor text-[9px] tracking-[0.3em] uppercase"
+                  style={{ color: 'rgba(255,222,79,0.4)' }}>
+                  Voice Samples
+                </p>
+              </div>
+
+              {/* Sample cards — single column on mobile, 2-col on sm */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 w-full">
+                {samples.map((s, i) => renderSampleCard(s, i))}
+              </div>
+            </div>
+            {/* ══ END MOBILE ONLY ══ */}
+
           </div>
 
-          {/* ══════════════ RIGHT COLUMN ══════════════ */}
+          {/* ══════════════ RIGHT COLUMN — desktop only ══════════════ */}
           <div className="hidden xl:flex items-center justify-center gap-5 relative">
 
             {/* Sample cards — left of image */}
             <div className="flex flex-col gap-2.5 flex-shrink-0" style={{ width: '220px' }}>
-              {samples.map((s, i) => (
-                <button
-                  key={s.label}
-                  onClick={() => setPlayingSample(playingSample === i ? null : i)}
-                  className={`sample-card fade-r${i + 1} flex items-center gap-3 rounded-2xl px-4 py-3 w-full text-left cursor-pointer`}
-                  style={{
-                    background: playingSample === i
-                      ? 'rgba(255,222,79,0.08)'
-                      : 'rgba(255,255,255,0.03)',
-                    border: `1px solid ${playingSample === i ? 'rgba(255,222,79,0.25)' : 'rgba(255,255,255,0.07)'}`,
-                    backdropFilter: 'blur(12px)',
-                    WebkitBackdropFilter: 'blur(12px)',
-                  }}
-                >
-                  {/* Play icon */}
-                  <span
-                    className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0"
-                    style={{
-                      background: playingSample === i
-                        ? '#ffde4f'
-                        : 'rgba(255,222,79,0.10)',
-                      border: '1px solid rgba(255,222,79,0.2)',
-                    }}
-                  >
-                    {playingSample === i ? (
-                      <svg width="10" height="10" viewBox="0 0 24 24" fill="#181818">
-                        <rect x="5" y="4" width="4" height="16" rx="1" />
-                        <rect x="15" y="4" width="4" height="16" rx="1" />
-                      </svg>
-                    ) : (
-                      <svg width="10" height="10" viewBox="0 0 24 24" fill="#ffde4f">
-                        <path d="M6 4l14 8-14 8V4z" />
-                      </svg>
-                    )}
-                  </span>
-
-                  {/* Label & duration */}
-                  <div className="flex flex-col gap-0.5 min-w-0 flex-1">
-                    <span
-                      className="font-tenor text-[11px] tracking-[0.12em] uppercase"
-                      style={{ color: playingSample === i ? '#ffde4f' : 'rgba(245,240,232,0.7)' }}
-                    >
-                      {s.label}
-                    </span>
-                    <span
-                      className="font-dm text-[11px]"
-                      style={{ color: 'rgba(245,240,232,0.28)' }}
-                    >
-                      {s.duration}
-                    </span>
-                  </div>
-
-                  {/* Download button — reveals on card hover */}
-                  <span
-                    className="dl-btn w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0"
-                    onClick={(e) => handleDownload(e, s, i)}
-                    title={`Download ${s.label}`}
-                    style={{
-                      background: downloadingIdx === i
-                        ? '#ffde4f'
-                        : 'rgba(255,222,79,0.12)',
-                      border: '1px solid rgba(255,222,79,0.25)',
-                    }}
-                  >
-                    {downloadingIdx === i ? (
-                      /* Checkmark on success */
-                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#181818" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                        <polyline points="20 6 9 17 4 12" />
-                      </svg>
-                    ) : (
-                      /* Download arrow */
-                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ffde4f" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M12 3v13M5 16l7 7 7-7" />
-                        <path d="M3 21h18" />
-                      </svg>
-                    )}
-                  </span>
-                </button>
-              ))}
+              {samples.map((s, i) => renderSampleCard(s, i, `fade-r${i + 1}`))}
             </div>
 
             {/* Jeremy's photo */}
-            <div
-              className="img-frame fade-r1 relative flex-shrink-0 rounded-2xl overflow-hidden"
-              style={{
-                width: '260px',
-                height: '460px',
-                border: '1px solid rgba(255,222,79,0.10)',
-              }}
-            >
-              {/* Gradient overlay at bottom */}
-              <div
-                className="absolute bottom-0 left-0 right-0 h-24 z-10 pointer-events-none"
-                style={{ background: 'linear-gradient(to top, rgba(13,11,7,0.85), transparent)' }}
-              />
-              <Image
-                src="/jeremy.jpeg"
-                alt="Jeremy Francis"
-                fill
-                className="object-cover object-top"
-                priority
-              />
+            <div className="img-frame fade-r1 relative flex-shrink-0 rounded-2xl overflow-hidden"
+              style={{ width: '260px', height: '460px', border: '1px solid rgba(255,222,79,0.10)' }}>
+              <div className="absolute bottom-0 left-0 right-0 h-24 z-10 pointer-events-none"
+                style={{ background: 'linear-gradient(to top, rgba(13,11,7,0.85), transparent)' }} />
+              <Image src="/jeremy.jpeg" alt="Jeremy Francis" fill className="object-cover object-top" priority />
             </div>
 
           </div>
