@@ -63,10 +63,9 @@ export default function Works() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,500;1,300;1,400&family=Tenor+Sans&family=DM+Sans:wght@300;400&display=swap');
-        .f-cormorant { font-family: 'Cormorant Garamond', serif; }
-        .f-tenor     { font-family: 'Tenor Sans', sans-serif; }
-        .f-dm        { font-family: 'DM Sans', sans-serif; }
+        .f-cormorant { font-family: var(--font-fraunces), serif; }
+        .f-tenor     { font-family: var(--font-fraunces), serif; }
+        .f-dm        { font-family: var(--font-fraunces), serif; }
 
         /* Waveform */
         @keyframes bar {

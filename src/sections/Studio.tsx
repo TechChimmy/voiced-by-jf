@@ -12,16 +12,20 @@ const images = [
 
 export default function Studio() {
   const [hovered, setHovered] = useState<number | null>(null)
+  const [tapped, setTapped] = useState<number | null>(0) // mobile tap state, first open by default
+
+  const handleTap = (i: number) => {
+    setTapped(prev => (prev === i ? null : i))
+  }
 
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Tenor+Sans&family=DM+Sans:wght@300;400&display=swap');
-        .f-cormorant { font-family: 'Cormorant Garamond', serif; }
-        .f-tenor     { font-family: 'Tenor Sans', sans-serif; }
-        .f-dm        { font-family: 'DM Sans', sans-serif; }
+        .f-cormorant { font-family: var(--font-fraunces), serif; }
+        .f-tenor     { font-family: var(--font-fraunces), serif; }
+        .f-dm        { font-family: var(--font-fraunces), serif; }
 
-        /* Film panel expand */
+        /* ── DESKTOP: horizontal film panel expand ── */
         .film-panel {
           flex: 1;
           transition: flex 0.6s cubic-bezier(0.22, 1, 0.36, 1);
@@ -100,6 +104,81 @@ export default function Studio() {
           background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
           opacity: 0.025; pointer-events: none;
         }
+
+        /* ══════════════════════════════
+           MOBILE ONLY: vertical stack
+        ══════════════════════════════ */
+        .film-panel-mobile {
+          position: relative;
+          overflow: hidden;
+          cursor: pointer;
+          border-radius: 16px;
+          /* collapsed height */
+          height: 60px;
+          transition: height 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+          flex-shrink: 0;
+        }
+        .film-panel-mobile.expanded-mobile {
+          height: 300px;
+        }
+
+        /* Collapsed: horizontal label strip */
+        .h-label {
+          position: absolute;
+          top: 50%; left: 50%;
+          transform: translate(-50%, -50%);
+          white-space: nowrap;
+          opacity: 1;
+          transition: opacity 0.25s;
+          z-index: 20;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+        }
+        .film-panel-mobile.expanded-mobile .h-label {
+          opacity: 0;
+          pointer-events: none;
+        }
+
+        /* Expanded: bottom content (mobile) */
+        .panel-content-mobile {
+          position: absolute; bottom: 0; left: 0; right: 0;
+          padding: 20px 20px 22px;
+          opacity: 0;
+          transform: translateY(10px);
+          transition: opacity 0.35s 0.18s, transform 0.35s 0.18s;
+          z-index: 20;
+          background: linear-gradient(to top, rgba(13,11,7,0.92) 0%, transparent 100%);
+        }
+        .film-panel-mobile.expanded-mobile .panel-content-mobile {
+          opacity: 1;
+          transform: translateY(0);
+        }
+
+        /* Mobile panel overlay */
+        .panel-overlay-mobile {
+          position: absolute; inset: 0;
+          background: linear-gradient(to top, rgba(13,11,7,0.9) 0%, rgba(13,11,7,0.4) 60%, rgba(13,11,7,0.15) 100%);
+          transition: background 0.4s;
+        }
+        .film-panel-mobile.expanded-mobile .panel-overlay-mobile {
+          background: linear-gradient(to top, rgba(13,11,7,0.82) 0%, rgba(13,11,7,0.1) 70%, rgba(13,11,7,0.0) 100%);
+        }
+
+        /* Gold left accent bar — mobile */
+        .accent-bar-mobile {
+          position: absolute;
+          left: 0; top: 10px; bottom: 10px;
+          width: 2px;
+          border-radius: 2px;
+          background: linear-gradient(180deg, transparent, #ffde4f 30%, #ffde4f 70%, transparent);
+          opacity: 0;
+          transition: opacity 0.3s;
+          z-index: 30;
+        }
+        .film-panel-mobile.expanded-mobile .accent-bar-mobile {
+          opacity: 1;
+        }
       `}</style>
 
       <section className="studio-grain relative w-full bg-[#0d0b07] py-10 px-6 md:px-12 overflow-hidden">
@@ -158,8 +237,8 @@ export default function Studio() {
             </div>
           </div>
 
-          {/* ── Expanding Film Panels ── */}
-          <div className="flex h-[260px] md:h-[320px] gap-2">
+          {/* ── DESKTOP: Expanding Film Panels (unchanged) ── */}
+          <div className="hidden md:flex h-[320px] gap-2">
             {images.map((img, i) => (
               <div
                 key={i}
@@ -167,29 +246,20 @@ export default function Studio() {
                 onMouseEnter={() => setHovered(i)}
                 onMouseLeave={() => setHovered(null)}
               >
-                {/* Photo */}
                 <Image src={img.src} alt={img.label} fill className="object-cover" />
-
-                {/* Overlay */}
                 <div className="panel-overlay" />
-
-                {/* Index number — top right */}
                 <div className="panel-num">
                   <span className="f-tenor text-[10px] tracking-[0.2em]"
                     style={{ color: 'rgba(255,222,79,0.4)' }}>
                     0{i + 1}
                   </span>
                 </div>
-
-                {/* Collapsed: vertical label */}
                 <div className="v-label">
                   <span className="f-tenor text-[9px] tracking-[0.25em] uppercase"
                     style={{ color: 'rgba(240,234,216,0.45)' }}>
                     {img.label}
                   </span>
                 </div>
-
-                {/* Gold left accent bar */}
                 <div
                   className="absolute left-0 top-8 bottom-8 w-[2px] z-30 rounded-full transition-opacity duration-300"
                   style={{
@@ -197,8 +267,6 @@ export default function Studio() {
                     opacity: hovered === i ? 1 : 0,
                   }}
                 />
-
-                {/* Expanded: bottom content */}
                 <div className="panel-content">
                   <p className="f-tenor text-[8px] tracking-[0.28em] uppercase mb-2"
                     style={{ color: 'rgba(255,222,79,0.5)' }}>
@@ -206,6 +274,60 @@ export default function Studio() {
                   </p>
                   <p className="f-cormorant italic font-light text-[#f0ead8]"
                     style={{ fontSize: '26px', lineHeight: 1.1 }}>
+                    Where the magic<br />happens.
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* ── MOBILE: Vertical tap-to-expand panels ── */}
+          <div className="flex md:hidden flex-col gap-2">
+            {images.map((img, i) => (
+              <div
+                key={i}
+                className={`film-panel-mobile ${tapped === i ? 'expanded-mobile' : ''}`}
+                onClick={() => handleTap(i)}
+              >
+                <Image src={img.src} alt={img.label} fill className="object-cover object-center" />
+
+                {/* Overlay */}
+                <div className="panel-overlay-mobile" />
+
+                {/* Gold left accent bar */}
+                <div className="accent-bar-mobile" />
+
+                {/* Index number */}
+                <div className="absolute top-4 right-4 z-20">
+                  <span className="f-tenor text-[10px] tracking-[0.2em]"
+                    style={{ color: 'rgba(255,222,79,0.45)' }}>
+                    0{i + 1}
+                  </span>
+                </div>
+
+                {/* Collapsed: horizontal label + arrow */}
+                <div className="h-label">
+                  <span className="f-tenor text-[10px] tracking-[0.22em] uppercase"
+                    style={{ color: 'rgba(240,234,216,0.55)' }}>
+                    {img.label}
+                  </span>
+                  <svg
+                    width="10" height="10" viewBox="0 0 24 24" fill="none"
+                    stroke="rgba(255,222,79,0.5)" strokeWidth="2" strokeLinecap="round"
+                    style={{ transform: tapped === i ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.3s' }}
+                  >
+                    <path d="M6 9l6 6 6-6" />
+                  </svg>
+                </div>
+
+                {/* Expanded: bottom content */}
+                <div className="panel-content-mobile">
+                  <p className="f-tenor text-[8px] tracking-[0.28em] uppercase mb-2"
+                    style={{ color: 'rgba(255,222,79,0.55)' }}>
+                    {img.label}
+                  </p>
+                  <p className="f-cormorant italic font-light text-[#f0ead8]"
+                    style={{ fontSize: '24px', lineHeight: 1.1 }}>
                     Where the magic<br />happens.
                   </p>
                 </div>

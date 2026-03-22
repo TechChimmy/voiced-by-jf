@@ -39,7 +39,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${montserrat.className} ${montserrat.variable} ${fraunces.variable} select-none bg-[#0d0b07]`}
+        className={`${fraunces.className} ${fraunces.variable} ${montserrat.variable} select-none bg-[#0d0b07]`}
       >
         <Navbar />
         {/*

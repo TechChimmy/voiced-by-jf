@@ -108,11 +108,6 @@ export default function Navbar() {
 
   return (
     <>
-      {/* Google Fonts */}
-      <link
-        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;1,300&family=Tenor+Sans&display=swap"
-        rel="stylesheet"
-      />
 
       {/* ════════════════════════════════════
           DESKTOP — FLOATING PILL NAVBAR
@@ -333,7 +328,7 @@ export default function Navbar() {
                 <span
                   className={`text-xl leading-none ${active ? 'italic' : ''}`}
                   style={{
-                    fontFamily: "'Cormorant Garamond', serif",
+                    fontFamily: "var(--font-fraunces), serif",
                     fontWeight: 300,
                     color: active ? '#ffde4f' : 'rgba(240,234,216,0.75)',
                   }}
@@ -359,7 +354,7 @@ export default function Navbar() {
           />
           <p
             className="text-[9px] tracking-[0.3em] uppercase mb-3"
-            style={{ fontFamily: "'Tenor Sans', sans-serif", color: 'rgba(255,222,79,0.3)' }}
+            style={{ fontFamily: "var(--font-fraunces), serif", color: 'rgba(255,222,79,0.3)' }}
           >
             Contact
           </p>
@@ -371,7 +366,7 @@ export default function Navbar() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-3 text-sm font-light transition-colors duration-200 hover:text-[#ffde4f]"
-                style={{ color: 'rgba(240,234,216,0.4)', fontFamily: 'DM Sans, sans-serif' }}
+                style={{ color: 'rgba(240,234,216,0.4)', fontFamily: 'var(--font-fraunces), serif' }}
               >
                 <span>{item.icon}</span>
                 {item.name === 'WhatsApp' ? '+91 80733 72921' : 'voicedbyjf@gmail.com'}
@@ -439,7 +434,7 @@ function NavPillItem({ href, icon, label, active, external, animDelay, scrolled 
           'whitespace-nowrap px-2.5 py-1.5 rounded-lg text-[10px] tracking-[0.14em] uppercase',
         ].join(' ')}
         style={{
-          fontFamily: "'Tenor Sans', sans-serif",
+          fontFamily: "var(--font-fraunces), serif",
           background: 'rgba(11,9,5,0.92)',
           border: '1px solid rgba(255,222,79,0.15)',
           color: 'rgba(240,234,216,0.85)',

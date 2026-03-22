@@ -18,9 +18,8 @@ export default function TrustedBy() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,300&family=Tenor+Sans&display=swap');
-        .f-tenor     { font-family: 'Tenor Sans', sans-serif; }
-        .f-cormorant { font-family: 'Cormorant Garamond', serif; }
+        .f-tenor     { font-family: var(--font-fraunces), serif; }
+        .f-cormorant { font-family: var(--font-fraunces), serif; }
 
         /* ── Section background ── */
         .tb-section {

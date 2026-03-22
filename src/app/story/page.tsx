@@ -99,11 +99,10 @@ export default function Story() {
     return (
         <>
             <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&family=Tenor+Sans&display=swap');
-        .f-bebas      { font-family:'Bebas Neue',sans-serif; }
-        .f-cormorant  { font-family:'Cormorant Garamond',serif; }
-        .f-dm         { font-family:'DM Sans',sans-serif; }
-        .f-tenor      { font-family:'Tenor Sans',sans-serif; }
+        .f-bebas      { font-family:var(--font-fraunces),serif; }
+        .f-cormorant  { font-family:var(--font-fraunces),serif; }
+        .f-dm         { font-family:var(--font-fraunces),serif; }
+        .f-tenor      { font-family:var(--font-fraunces),serif; }
 
         .story-grain::before {
           content:''; position:fixed; inset:0; pointer-events:none; z-index:0;

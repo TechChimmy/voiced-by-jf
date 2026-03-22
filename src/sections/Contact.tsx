@@ -64,11 +64,10 @@ export default function Contact() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@300;400;500&family=Tenor+Sans&display=swap');
-        .f-bebas     { font-family:'Bebas Neue',sans-serif; }
-        .f-cormorant { font-family:'Cormorant Garamond',serif; }
-        .f-dm        { font-family:'DM Sans',sans-serif; }
-        .f-tenor     { font-family:'Tenor Sans',sans-serif; }
+        .f-bebas     { font-family:var(--font-fraunces),serif; }
+        .f-cormorant { font-family:var(--font-fraunces),serif; }
+        .f-dm        { font-family:var(--font-fraunces),serif; }
+        .f-tenor     { font-family:var(--font-fraunces),serif; }
 
         /* Grain */
         .contact-grain::before {
@@ -130,7 +129,7 @@ export default function Contact() {
           border:1px solid rgba(255,222,79,0.1);
           border-radius:12px;
           padding:14px 16px;
-          font-family:'DM Sans',sans-serif;
+          font-family:var(--font-fraunces),serif;
           font-size:13px;
           font-weight:300;
           color:rgba(240,234,216,0.85);
@@ -149,7 +148,7 @@ export default function Contact() {
         .submit-btn {
           width:100%; background:#ffde4f; color:#0d0b07;
           border:none; border-radius:12px; padding:15px;
-          font-family:'Tenor Sans',sans-serif;
+          font-family:var(--font-fraunces),serif;
           font-size:11px; letter-spacing:0.22em; text-transform:uppercase;
           cursor:pointer; font-weight:600;
           transition:background 0.2s, transform 0.15s, box-shadow 0.2s;

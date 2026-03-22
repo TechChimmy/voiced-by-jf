@@ -175,12 +175,10 @@ export default function Hero() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@300;400;500&family=Tenor+Sans&display=swap');
-
-        .font-bebas    { font-family: 'Bebas Neue', sans-serif; }
-        .font-cormorant { font-family: 'Cormorant Garamond', serif; }
-        .font-dm       { font-family: 'DM Sans', sans-serif; }
-        .font-tenor    { font-family: 'Tenor Sans', sans-serif; }
+        .font-bebas    { font-family: var(--font-fraunces), serif; }
+        .font-cormorant { font-family: var(--font-fraunces), serif; }
+        .font-dm       { font-family: var(--font-fraunces), serif; }
+        .font-tenor    { font-family: var(--font-fraunces), serif; }
 
         .hero-grain::before {
           content: '';
@@ -322,7 +320,7 @@ export default function Hero() {
         </span>
 
         {/* ── TWO-COLUMN GRID ── */}
-        <div className="relative z-10 w-full max-w-[1200px] mx-auto px-8 xl:px-12 pt-22 pb-20 grid grid-cols-1 xl:grid-cols-2 gap-12 xl:gap-16 items-center">
+        <div className="relative z-10 w-full max-w-[1200px] mx-auto px-8 xl:px-12 pt-14 md:pt-22 pb-20 grid grid-cols-1 xl:grid-cols-2 gap-12 xl:gap-16 items-center">
 
           {/* ══════════════ LEFT COLUMN ══════════════ */}
           <div className="flex flex-col items-start">
