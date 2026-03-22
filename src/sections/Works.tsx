@@ -1,289 +1,340 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import Image from 'next/image'
-import { Play, ChevronRight, ChevronLeft } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { motion, AnimatePresence } from 'framer-motion'
 import { useSwipeable } from 'react-swipeable'
-import { motion, AnimatePresence, Variants } from 'framer-motion'
 
-const contentData = [
+const works = [
   {
-    title: 'Audiobooks',
+    id: 0,
+    tag: '01',
+    category: 'Audiobooks',
     image: '/thumb.jpg',
-    alt: 'Headphones',
-    description:
-      "From gripping non-fiction to immersive fiction, my voice adapts to your narrative's every twist.",
-    buttonText: 'More Audiobook Samples',
+    description: "From gripping non-fiction to immersive fiction, my voice adapts to your narrative's every twist and turn.",
+    buttonText: 'Audiobook Samples',
     downloadLink: '/audio/audiobook-sample.mp3',
   },
   {
-    title: 'D2C Ads',
+    id: 1,
+    tag: '02',
+    category: 'D2C Ads',
     image: '/thumb.jpg',
-    alt: 'Headphones',
-    description:
-      'Make your brand/product relatable and unforgettable with a voiceover that resonates long after that first listen.',
-    buttonText: 'More Ad Samples',
+    description: 'Make your brand relatable and unforgettable with a voiceover that resonates long after that first listen.',
+    buttonText: 'Ad Samples',
     downloadLink: '/audio/d2c-sample.mp3',
   },
   {
-    title: 'Corporate Videos',
+    id: 2,
+    tag: '03',
+    category: 'Corporate Videos',
     image: '/thumb.jpg',
-    alt: 'Headphones',
-    description:
-      "Professional, yet personable and earnest... tailored to reflect your brand's unique tone and style.",
-    buttonText: 'See Corporate Narrations',
+    description: "Professional yet personable — tailored to reflect your brand's unique tone and style with earnest delivery.",
+    buttonText: 'Corporate Samples',
     downloadLink: '/audio/corporate-sample.mp3',
   },
   {
-    title: 'Audiobooks',
+    id: 3,
+    tag: '04',
+    category: 'Explainer Videos',
     image: '/thumb.jpg',
-    alt: 'Headphones',
-    description:
-      "From gripping non-fiction to immersive fiction, my voice adapts to your narrative's every twist.",
-    buttonText: 'More Audiobook Samples',
-    downloadLink: '/audio/audiobook-sample.mp3',
-  },
-  {
-    title: 'D2C Ads',
-    image: '/thumb.jpg',
-    alt: 'Headphones',
-    description:
-      'Make your brand/product relatable and unforgettable with a voiceover that resonates long after that first listen.',
-    buttonText: 'More Ad Samples',
-    downloadLink: '/audio/d2c-sample.mp3',
-  },
-  {
-    title: 'Corporate Videos',
-    image: '/thumb.jpg',
-    alt: 'Headphones',
-    description:
-      "Professional, yet personable and earnest... tailored to reflect your brand's unique tone and style.",
-    buttonText: 'See Corporate Narrations',
-    downloadLink: '/audio/corporate-sample.mp3',
-  },
-  {
-    title: 'Audiobooks',
-    image: '/thumb.jpg',
-    alt: 'Headphones',
-    description:
-      "From gripping non-fiction to immersive fiction, my voice adapts to your narrative's every twist.",
-    buttonText: 'More Audiobook Samples',
-    downloadLink: '/audio/audiobook-sample.mp3',
-  },
-  {
-    title: 'D2C Ads',
-    image: '/thumb.jpg',
-    alt: 'Headphones',
-    description:
-      'Make your brand/product relatable and unforgettable with a voiceover that resonates long after that first listen.',
-    buttonText: 'More Ad Samples',
-    downloadLink: '/audio/d2c-sample.mp3',
-  },
-  {
-    title: 'Corporate Videos',
-    image: '/thumb.jpg',
-    alt: 'Headphones',
-    description:
-      "Professional, yet personable and earnest... tailored to reflect your brand's unique tone and style.",
-    buttonText: 'See Corporate Narrations',
-    downloadLink: '/audio/corporate-sample.mp3',
+    description: 'Complex ideas made simple. Clear, engaging narration that guides your audience from confusion to clarity.',
+    buttonText: 'Explainer Samples',
+    downloadLink: '/audio/explainer-sample.mp3',
   },
 ]
 
-const DOT_COUNT = 3
-
 export default function Works() {
-  const [cardsPerSlide, setCardsPerSlide] = useState(3)
-  const [currentDot, setCurrentDot] = useState(0)
-  const [direction, setDirection] = useState(0)
+  const [active, setActive] = useState(0)
+  const [playing, setPlaying] = useState(false)
+  const [dir, setDir] = useState(1)
 
-  useEffect(() => {
-    const updateCardsPerSlide = () => {
-      const width = window.innerWidth
-      if (width >= 1280) {
-        setCardsPerSlide(3)
-      } else if (width >= 768) {
-        setCardsPerSlide(2)
-      } else {
-        setCardsPerSlide(1)
-      }
-    }
-
-    updateCardsPerSlide()
-    window.addEventListener('resize', updateCardsPerSlide)
-    return () => window.removeEventListener('resize', updateCardsPerSlide)
-  }, [])
-
-  const getCurrentSlideCards = () => {
-    const slidesCount = Math.ceil(contentData.length / cardsPerSlide)
-    const slideIndex = currentDot % slidesCount
-    const start = slideIndex * cardsPerSlide
-    return contentData.slice(start, start + cardsPerSlide)
+  const go = (i: number) => {
+    setDir(i > active ? 1 : -1)
+    setActive(i)
+    setPlaying(false)
   }
+  const next = () => go((active + 1) % works.length)
+  const prev = () => go((active - 1 + works.length) % works.length)
+  const swipe = useSwipeable({ onSwipedLeft: next, onSwipedRight: prev, trackMouse: true })
 
-  const nextSlide = () => {
-    setDirection(1)
-    setCurrentDot((prev) => (prev + 1) % DOT_COUNT)
-  }
-
-  const prevSlide = () => {
-    setDirection(-1)
-    setCurrentDot((prev) => (prev - 1 + DOT_COUNT) % DOT_COUNT)
-  }
-
-  const goToSlide = (index: number) => {
-    setDirection(index > currentDot ? 1 : -1)
-    setCurrentDot(index)
-  }
-
-  const variants: Variants = {
-    enter: (direction: number) => ({
-      x: direction > 0 ? 300 : -300,
-      opacity: 0,
-      transition: {
-        x: { type: "spring", stiffness: 130, damping: 22 },
-        opacity: { duration: 0.15 }
-      }
-    }),
-    center: {
-      x: 0,
-      opacity: 1,
-      transition: {
-        x: { type: "spring", stiffness: 130, damping: 22 },
-        opacity: { duration: 0.15 }
-      }
-    },
-    exit: (direction: number) => ({
-      x: direction < 0 ? 300 : -300,
-      opacity: 0,
-      transition: {
-        x: { type: "spring", stiffness: 130, damping: 22 },
-        opacity: { duration: 0.15 }
-      }
-    })
-  }
-
-  const swipeHandlers = useSwipeable({
-    onSwipedLeft: nextSlide,
-    onSwipedRight: prevSlide,
-    trackMouse: true,
-  })
+  const item = works[active]
 
   return (
-    <div
-      {...swipeHandlers}
-      className="bg-[#ffde4f] min-h-screen flex items-center justify-center relative overflow-hidden"
-    >
-      <div className="container mx-auto px-4 py-8 xl:py-16 relative z-10">
-        <div className="relative">
-          <AnimatePresence mode="popLayout" custom={direction} initial={false}>
+    <>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,500;1,300;1,400&family=Tenor+Sans&family=DM+Sans:wght@300;400&display=swap');
+        .f-cormorant { font-family: 'Cormorant Garamond', serif; }
+        .f-tenor     { font-family: 'Tenor Sans', sans-serif; }
+        .f-dm        { font-family: 'DM Sans', sans-serif; }
+
+        /* Waveform */
+        @keyframes bar {
+          0%,100% { transform: scaleY(0.35); }
+          50%      { transform: scaleY(1); }
+        }
+        .wbar { width:3px; border-radius:3px; background:#0d0b07; transform-origin:bottom; }
+        .wbar:nth-child(1){animation:bar 0.75s 0.00s ease-in-out infinite;}
+        .wbar:nth-child(2){animation:bar 0.75s 0.12s ease-in-out infinite;}
+        .wbar:nth-child(3){animation:bar 0.75s 0.06s ease-in-out infinite;}
+        .wbar:nth-child(4){animation:bar 0.75s 0.20s ease-in-out infinite;}
+        .wbar:nth-child(5){animation:bar 0.75s 0.09s ease-in-out infinite;}
+
+        /* Card */
+        .work-card {
+          background: #fff;
+          border-radius: 20px;
+          overflow: hidden;
+          box-shadow: 0 20px 60px rgba(0,0,0,0.18), 0 4px 16px rgba(0,0,0,0.10);
+        }
+
+        /* Play btn */
+        .play-btn {
+          width: 52px; height: 52px; border-radius: 50%;
+          background: #0d0b07;
+          display: flex; align-items: center; justify-content: center;
+          cursor: pointer; border: none;
+          transition: transform 0.2s, background 0.2s;
+          flex-shrink: 0;
+        }
+        .play-btn:hover { transform: scale(1.08); background: #1a1712; }
+
+        /* Download btn */
+        .dl-btn {
+          width: 40px; height: 40px; border-radius: 50%;
+          background: transparent;
+          border: 1.5px solid rgba(13,11,7,0.2);
+          display: flex; align-items: center; justify-content: center;
+          cursor: pointer;
+          transition: border-color 0.2s, background 0.2s;
+          flex-shrink: 0;
+        }
+        .dl-btn:hover { border-color: #0d0b07; background: rgba(13,11,7,0.05); }
+
+        /* CTA */
+        .cta-btn {
+          display: inline-flex; align-items: center; gap: 7px;
+          background: #0d0b07; color: #ffde4f;
+          border: none; border-radius: 100px;
+          padding: 11px 22px;
+          font-family: 'Tenor Sans', sans-serif;
+          font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+          cursor: pointer;
+          transition: background 0.2s, transform 0.15s;
+          white-space: nowrap;
+        }
+        .cta-btn:hover { background: #2a2015; transform: scale(1.02); }
+
+        /* Nav arrows */
+        .nav-arr {
+          width: 44px; height: 44px; border-radius: 50%;
+          background: rgba(13,11,7,0.1);
+          border: 1.5px solid rgba(13,11,7,0.15);
+          display: flex; align-items: center; justify-content: center;
+          cursor: pointer;
+          transition: background 0.2s, border-color 0.2s, transform 0.15s;
+          color: #0d0b07;
+        }
+        .nav-arr:hover { background: rgba(13,11,7,0.15); border-color: rgba(13,11,7,0.35); transform: scale(1.05); }
+
+        /* Progress dot */
+        .prog-dot {
+          height: 3px; border-radius: 100px;
+          background: rgba(13,11,7,0.2);
+          cursor: pointer;
+          transition: background 0.3s, width 0.35s cubic-bezier(0.22,1,0.36,1);
+          flex-shrink: 0;
+        }
+        .prog-dot.on { background: #0d0b07; width: 24px !important; }
+        .prog-dot:not(.on) { width: 6px; }
+        .prog-dot:hover:not(.on) { background: rgba(13,11,7,0.4); }
+
+        /* Category tabs */
+        .cat-tab {
+          display: inline-flex; align-items: center; gap: 6px;
+          padding: 7px 16px; border-radius: 100px;
+          font-family: 'Tenor Sans', sans-serif;
+          font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase;
+          cursor: pointer; border: 1.5px solid transparent;
+          transition: all 0.25s;
+          white-space: nowrap;
+        }
+        .cat-tab.on {
+          background: #0d0b07; color: #ffde4f;
+          border-color: #0d0b07;
+        }
+        .cat-tab:not(.on) {
+          background: #ffffff; color: rgba(13,11,7,0.55);
+          border-color: rgba(13,11,7,0.08);
+        }
+        .cat-tab:not(.on):hover {
+          background: #ffffff; color: rgba(13,11,7,0.85);
+          border-color: rgba(13,11,7,0.25);
+        }
+
+        /* Grain on gold bg */
+        .gold-bg::before {
+          content: '';
+          position: absolute; inset: 0;
+          background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='250' height='250'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='250' height='250' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+          opacity: 0.04; pointer-events: none; z-index: 0;
+        }
+      `}</style>
+
+      <section className="gold-bg relative w-full py-20 px-6 md:px-12 overflow-hidden"
+        style={{ background: '#ffde4f' }}>
+
+        {/* Subtle radial shadow top */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[200px] pointer-events-none"
+          style={{ background: 'radial-gradient(ellipse, rgba(0,0,0,0.06) 0%, transparent 70%)' }} />
+
+        <div className="relative z-10 max-w-4xl mx-auto">
+
+          {/* Header */}
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-10">
+            <div>
+              <div className="flex items-center gap-3 mb-2">
+                <span className="block w-6 h-px" style={{ background: 'rgba(13,11,7,0.3)' }} />
+                <span className="f-tenor text-[9px] tracking-[0.35em] uppercase"
+                  style={{ color: 'rgba(13,11,7,0.45)' }}>My Work</span>
+              </div>
+              <h2 className="f-cormorant font-light"
+                style={{ fontSize: 'clamp(40px, 6vw, 64px)', color: '#0d0b07', lineHeight: 0.95 }}>
+                Work that<br />
+                <em className="italic" style={{ opacity: 0.55 }}>speaks.</em>
+              </h2>
+            </div>
+
+            {/* Arrow nav */}
+            <div className="flex items-center gap-2 flex-shrink-0">
+              <button className="nav-arr" onClick={prev}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M19 12H5M11 6l-6 6 6 6" />
+                </svg>
+              </button>
+              <button className="nav-arr" onClick={next}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M5 12h14M13 6l6 6-6 6" />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          {/* Category tabs */}
+          <div className="flex flex-wrap gap-2 mb-8" {...swipe}>
+            {works.map((w, i) => (
+              <button key={w.id} className={`cat-tab ${i === active ? 'on' : ''}`} onClick={() => go(i)}>
+                <span style={{ opacity: i === active ? 0.45 : 0.4 }}>{w.tag}</span>
+                {w.category}
+              </button>
+            ))}
+          </div>
+
+          {/* Card */}
+          <AnimatePresence mode="wait" custom={dir}>
             <motion.div
-              key={currentDot}
-              custom={direction}
-              variants={variants}
-              initial="enter"
-              animate="center"
-              exit="exit"
-              transition={{ type: "tween", duration: 0.1 }}
-              className="flex justify-center items-center gap-6 flex-wrap xl:flex-nowrap"
+              key={active}
+              custom={dir}
+              initial={{ opacity: 0, y: dir > 0 ? 24 : -24 }}
+              animate={{ opacity: 1, y: 0, transition: { duration: 0.42, ease: [0.22, 1, 0.36, 1] } }}
+              exit={{ opacity: 0, y: dir > 0 ? -24 : 24, transition: { duration: 0.25 } }}
+              className="work-card"
             >
-              {getCurrentSlideCards().map((item, index) => (
-                <motion.div
-                  key={`${currentDot}-${index}`}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.15, delay: index * 0.02 }}
-                  className="w-[300px] xl:w-[30%] h-[500px] md:h-[520px] bg-white rounded-2xl p-6 shadow-lg flex flex-col justify-between"
-                >
+              <div className="grid grid-cols-1 md:grid-cols-2">
+
+                {/* Thumbnail */}
+                <div className="relative w-full" style={{ minHeight: 260 }}>
+                  <Image src={item.image} alt={item.category} fill className="object-cover" />
+                  {/* Subtle overlay */}
+                  <div className="absolute inset-0"
+                    style={{ background: 'linear-gradient(135deg, rgba(13,11,7,0.18) 0%, transparent 60%)' }} />
+                  {/* Tag */}
+                  <span className="absolute top-4 left-4 f-tenor text-[9px] tracking-[0.28em] uppercase px-3 py-1.5 rounded-full"
+                    style={{
+                      background: 'rgba(255,222,79,0.92)',
+                      color: '#0d0b07',
+                      boxShadow: '0 2px 12px rgba(0,0,0,0.15)',
+                    }}>
+                    {item.tag} · {item.category}
+                  </span>
+                </div>
+
+                {/* Content */}
+                <div className="flex flex-col justify-between p-7 md:p-9">
                   <div>
-                    <div className="aspect-video mb-4 rounded-lg overflow-hidden">
-                      <Image
-                        src={item.image}
-                        alt={item.alt}
-                        width={400}
-                        height={225}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    <h2 className="text-2xl font-bold text-gray-800 mb-4">{item.title}</h2>
-                    <p className="text-gray-600 mb-2 leading-relaxed">{item.description}</p>
+                    <h3 className="f-cormorant font-light mb-4"
+                      style={{ fontSize: 'clamp(26px, 3.5vw, 38px)', color: '#0d0b07', lineHeight: 1.05 }}>
+                      {item.category}
+                    </h3>
+                    <p className="f-dm font-light leading-relaxed mb-8"
+                      style={{ fontSize: '14px', color: 'rgba(13,11,7,0.55)' }}>
+                      {item.description}
+                    </p>
                   </div>
-                  <div className="mt-auto">
-                    <div className="flex items-center justify-start gap-3 mb-4">
-                      <Button size="icon" className="rounded-full bg-gray-800 hover:bg-gray-700">
-                        <Play className="w-5 h-5 fill-white" />
-                      </Button>
-                      <Button
-                        size="icon"
-                        className="rounded-full bg-gray-800 hover:bg-gray-700"
+
+                  {/* Controls */}
+                  <div>
+                    {/* Divider */}
+                    <div className="mb-5 h-px" style={{ background: 'rgba(13,11,7,0.08)' }} />
+                    <div className="flex items-center gap-3 flex-wrap">
+                      {/* Play */}
+                      <button className="play-btn" onClick={() => setPlaying(p => !p)}>
+                        {playing ? (
+                          <div className="flex items-end gap-[3px]" style={{ height: 18 }}>
+                            {[12, 18, 14, 20, 11].map((h, i) => (
+                              <span key={i} className="wbar" style={{ height: h }} />
+                            ))}
+                          </div>
+                        ) : (
+                          <svg width="17" height="17" viewBox="0 0 24 24" fill="#ffde4f">
+                            <path d="M6.5 4.5l13 7.5-13 7.5V4.5z" />
+                          </svg>
+                        )}
+                      </button>
+
+                      {/* Download */}
+                      <button className="dl-btn"
                         onClick={() => {
-                          const link = document.createElement('a')
-                          link.href = item.downloadLink
-                          link.download = item.downloadLink.split('/').pop() || 'sample.mp3'
-                          link.click()
-                        }}
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="w-5 h-5 text-white"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                          strokeWidth={2}
-                        >
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V4" />
+                          const a = document.createElement('a')
+                          a.href = item.downloadLink
+                          a.download = item.downloadLink.split('/').pop() || 'sample.mp3'
+                          a.click()
+                        }}>
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
+                          stroke="rgba(13,11,7,0.5)" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5 5-5M12 15V3" />
                         </svg>
-                      </Button>
+                      </button>
+
+                      {/* CTA */}
+                      <button className="cta-btn">
+                        {item.buttonText}
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none"
+                          stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M5 12h14M13 6l6 6-6 6" />
+                        </svg>
+                      </button>
                     </div>
-                    <Button className="w-full bg-gray-800 hover:bg-gray-700 text-white rounded-full py-3">
-                      {item.buttonText}
-                    </Button>
                   </div>
-                </motion.div>
-              ))}
+                </div>
+              </div>
             </motion.div>
           </AnimatePresence>
+
+          {/* Progress dots + counter */}
+          <div className="flex items-center gap-3 mt-6">
+            {works.map((_, i) => (
+              <button key={i} onClick={() => go(i)}
+                className={`prog-dot ${i === active ? 'on' : ''}`} />
+            ))}
+            <span className="f-tenor text-[9px] tracking-[0.25em] ml-2"
+              style={{ color: 'rgba(13,11,7,0.35)' }}>
+              {String(active + 1).padStart(2, '0')} / {String(works.length).padStart(2, '0')}
+            </span>
+          </div>
+
         </div>
-
-        <div className="flex justify-center items-center mt-12 space-x-3">
-          {[...Array(DOT_COUNT)].map((_, i) => (
-            <motion.div
-              key={i}
-              onClick={() => goToSlide(i)}
-              whileHover={{ scale: 1.2 }}
-              whileTap={{ scale: 0.9 }}
-              className={`w-3 h-3 rounded-full cursor-pointer transition-all duration-300 ${
-                currentDot === i ? 'bg-gray-800 scale-110' : 'bg-white'
-              }`}
-            />
-          ))}
-        </div>
-      </div>
-
-      <div className="absolute left-2 xl:left-4 top-1/2 -translate-y-1/2 z-20">
-        <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
-          <Button
-            onClick={prevSlide}
-            size="icon"
-            className="rounded-full w-8 h-8 xl:w-12 xl:h-12 bg-white hover:bg-gray-100 text-gray-800 shadow-lg p-0"
-          >
-            <ChevronLeft className="w-4 h-4 xl:w-6 xl:h-6" />
-          </Button>
-        </motion.div>
-      </div>
-
-      <div className="absolute right-2 xl:right-4 top-1/2 -translate-y-1/2 z-20">
-        <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
-          <Button
-            onClick={nextSlide}
-            size="icon"
-            className="rounded-full w-8 h-8 xl:w-12 xl:h-12 bg-white hover:bg-gray-100 text-gray-800 shadow-lg p-0"
-          >
-            <ChevronRight className="w-4 h-4 xl:w-6 xl:h-6" />
-          </Button>
-        </motion.div>
-      </div>
-    </div>
+      </section>
+    </>
   )
 }

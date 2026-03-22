@@ -1,13 +1,29 @@
 import type { Metadata } from "next";
+import localFont from "next/font/local";
 import "./globals.css";
 import { Montserrat } from "next/font/google";
-import Sidebar from "@/component/Sidebar";
+import Navbar from "@/component/Navbar";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
   display: "swap",
   variable: "--font-montserrat",
+});
+
+const fraunces = localFont({
+  src: [
+    {
+      path: "../../public/fonts/Fraunces-VariableFont_SOFT,WONK,opsz,wght.ttf",
+      style: "normal",
+    },
+    {
+      path: "../../public/fonts/Fraunces-Italic-VariableFont_SOFT,WONK,opsz,wght.ttf",
+      style: "italic",
+    },
+  ],
+  variable: "--font-fraunces",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -22,13 +38,18 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`relative ${montserrat.className} select-none bg-black overflow-hidden`}>
-        <div className="flex min-h-screen bg-black">
-          <Sidebar />
-          <main className="flex-1 ml-0 xl:ml-[260px] transition-all duration-300 overflow-hidden">
-            {children}
-          </main>
-        </div>
+      <body
+        className={`${montserrat.className} ${montserrat.variable} ${fraunces.variable} select-none bg-[#0d0b07]`}
+      >
+        <Navbar />
+        {/*
+          Navbar is fixed at top-5, pill height ~52px + 20px top offset + 16px bottom gap = ~88px total
+          Using pt-[88px] on xl to clear the floating pill navbar
+          Mobile: pt-16 to clear the fixed top bar
+        */}
+        <main>
+          {children}
+        </main>
       </body>
     </html>
   );
